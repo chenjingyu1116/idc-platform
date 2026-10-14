@@ -116,11 +116,33 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/agents', [AAgent::class, 'index'])->name('agents.index');
         Route::get('/coupons', [ACoupon::class, 'index'])->name('coupons.index');
         Route::get('/member-levels', [AMember::class, 'index'])->name('member-levels.index');
+        // 审计日志
+        Route::get('/audit-logs', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit-logs.index');
+        Route::get('/audit-logs/login', [\App\Http\Controllers\Admin\AuditLogController::class, 'login'])->name('audit-logs.login');
+
+        // 财务管理
+        Route::get('/finance', [\App\Http\Controllers\Admin\FinanceController::class, 'index'])->name('finance.index');
+
+        // 管理员账号
+        Route::get('/admins', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('admins.index');
+        // 提现审核
+        Route::get('/withdrawals', [\App\Http\Controllers\Admin\WithdrawalController::class, 'index'])->name('withdrawals.index');
+        Route::post('/withdrawals/{withdrawal}/approve', [\App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('withdrawals.approve');
+        Route::post('/withdrawals/{withdrawal}/reject', [\App\Http\Controllers\Admin\WithdrawalController::class, 'reject'])->name('withdrawals.reject');
 
         Route::get('/reports', [AReport::class, 'index'])->name('reports.index');
         Route::get('/monitor', [AMonitor::class, 'index'])->name('monitor.index');
         Route::get('/settings', [ASetting::class, 'index'])->name('settings.index');
         Route::post('/settings', [ASetting::class, 'update'])->name('settings.update');
+
+        // ─── 审计日志 ───
+
+        // ─── 提现审核 ───
+
+        // ─── 财务管理 ───
+
+        // ─── 管理员账号 ───
+
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -145,3 +167,39 @@ Route::get('/about', [PageController::class, 'about'])->name('page.about');
 Route::get('/terms', [PageController::class, 'terms'])->name('page.terms');
 Route::get('/privacy', [PageController::class, 'privacy'])->name('page.privacy');
 Route::get('/contact', [PageController::class, 'contact'])->name('page.contact');
+
+/* ═══ B9 后台增强：产品/订单/用户/公告 ═══ */
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // 产品
+    Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+
+    // 订单
+    Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update-status');
+
+    // 用户增强
+    Route::get('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'show'])->name('users.show');
+    Route::post('/users/{user}/adjust-balance', [\App\Http\Controllers\Admin\UserController::class, 'adjustBalance'])->name('users.adjust-balance');
+    Route::post('/users/{user}/reset-password', [\App\Http\Controllers\Admin\UserController::class, 'resetPassword'])->name('users.reset-password');
+    Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
+
+    // 公告完整 CRUD
+    Route::get('/announcements/{announcement}/edit', [\App\Http\Controllers\Admin\AnnouncementController::class, 'edit'])->name('announcements.edit');
+    Route::put('/announcements/{announcement}', [\App\Http\Controllers\Admin\AnnouncementController::class, 'update'])->name('announcements.update');
+});
+
+    // ─── 审计日志 ───
+    Route::get("/audit-logs", [\App\Http\Controllers\Admin\AuditLogController::class, "index"])->name("audit-logs.index");
+    Route::get("/audit-logs/login", [\App\Http\Controllers\Admin\AuditLogController::class, "login"])->name("audit-logs.login");
+
+    // ─── 提现审核 ───
+    Route::get("/withdrawals", [\App\Http\Controllers\Admin\WithdrawalController::class, "index"])->name("withdrawals.index");
+    Route::post("/withdrawals/{withdrawal}/approve", [\App\Http\Controllers\Admin\WithdrawalController::class, "approve"])->name("withdrawals.approve");
+    Route::post("/withdrawals/{withdrawal}/reject", [\App\Http\Controllers\Admin\WithdrawalController::class, "reject"])->name("withdrawals.reject");
+
+    // ─── 财务 ───
+    Route::get("/finance", [\App\Http\Controllers\Admin\FinanceController::class, "index"])->name("finance.index");
+
+    // ─── 管理员账号 ───
+    Route::get("/admins", [\App\Http\Controllers\Admin\AdminUserController::class, "index"])->name("admins.index");

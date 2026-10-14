@@ -126,10 +126,7 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 </div>
 </section>
 
-<footer class="py-10 border-t-2 border-pink-100" style="background:rgba(255,255,255,.7)">
-<div class="max-w-7xl mx-auto px-4 text-center text-xs" style="color:#9CA3AF">
-🌸 樱花云 © 2026 · 二次元专属云平台 · 友情链接：樱花动漫 | 萌云社区 | 次元主机
-</div>
-</footer>
+
+@include("components.site-footer")
 </body>
 </html>

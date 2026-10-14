@@ -57,6 +57,10 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 <a href="{{ route('admin.agents.index') }}" class="text-purple-500 hover:text-purple-400">🌸 代理</a>
 <a href="{{ route('admin.users.index') }}" class="text-purple-500 hover:text-purple-400">👥 用户</a>
 <a href="{{ route('admin.tickets.index') }}" class="text-purple-500 hover:text-purple-400">💌 工单</a>
+<a href="{{ route('admin.audit-logs.index') }}" class="text-purple-500 hover:text-purple-400">📜 日志</a>
+<a href="{{ route('admin.withdrawals.index') }}" class="text-purple-500 hover:text-purple-400">💸 提现</a>
+<a href="{{ route('admin.finance.index') }}" class="text-purple-500 hover:text-purple-400">💰 财务</a>
+<a href="{{ route('admin.admins.index') }}" class="text-purple-500 hover:text-purple-400">👑 管理员</a>
 @endif
 </div>
 </div>
@@ -84,8 +88,41 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 @yield('content')
 </main>
 
-<footer class="border-t-2 border-pink-100 mt-12 py-8 text-center text-sm" style="color:#9CA3AF;position:relative;z-index:10">
-🌸 樱花云 © 2026 · <a href="{{ route('home') }}" class="hover:text-pink-500">返回官网</a> · 二次元专属云平台
+@php
+    $__icp = \App\Models\Setting::where("key", "icp")->value("value") ?? "";
+    $__icpLink = \App\Models\Setting::where("key", "icp_link")->value("value") ?? "https://beian.miit.gov.cn/";
+    $__siteName = \App\Models\Setting::where("key", "site_name")->value("value") ?? "樱花云";
+    $__slogan = \App\Models\Setting::where("key", "site_slogan")->value("value") ?? "让 IDC 管理也能如此可爱";
+@endphp
+@php
+    $__siteName  = \App\Models\Setting::where("key", "site_name")->value("value")    ?? "樱花云";
+    $__slogan    = \App\Models\Setting::where("key", "site_slogan")->value("value")   ?? "让 IDC 管理也能如此可爱";
+    $__footer    = \App\Models\Setting::where("key", "footer_text")->value("value")   ?? "";
+    $__icp       = \App\Models\Setting::where("key", "icp")->value("value")           ?? "";
+    $__icpLink   = \App\Models\Setting::where("key", "icp_link")->value("value")      ?? "https://beian.miit.gov.cn/";
+    $__qq        = \App\Models\Setting::where("key", "contact_qq")->value("value")    ?? "";
+    $__wechat    = \App\Models\Setting::where("key", "contact_wechat")->value("value") ?? "";
+    $__email     = \App\Models\Setting::where("key", "contact_email")->value("value") ?? "";
+@endphp
+<footer class="border-t-2 border-pink-100 mt-12 py-8 px-4 text-center text-sm" style="color:#9CA3AF;position:relative;z-index:10">
+    <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4">
+        @if($__qq)      <span>💬 QQ: {{ $__qq }}</span>@endif
+        @if($__wechat)  <span>💚 微信: {{ $__wechat }}</span>@endif
+        @if($__email)   <span>📧 {{ $__email }}</span>@endif
+    </div>
+    <div>
+        🌸 {{ $__siteName }} © {{ date("Y") }} ·
+        <a href="{{ route("home") }}" class="hover:text-pink-500">返回官网</a>
+        @if($__slogan) · {{ $__slogan }}@endif
+    </div>
+    @if($__footer)
+    <div class="mt-2 text-xs">{{ $__footer }}</div>
+    @endif
+    @if($__icp)
+    <div class="mt-3 text-xs">
+        <a href="{{ $__icpLink }}" target="_blank" rel="noopener" class="hover:text-pink-500 transition">🌐 {{ $__icp }}</a>
+    </div>
+    @endif
 </footer>
 </body>
 </html>

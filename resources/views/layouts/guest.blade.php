@@ -12,10 +12,16 @@ body{
   font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;
   background:linear-gradient(135deg,#FFE5F0 0%,#E8F0FF 50%,#FFF0F5 100%);
   min-height:100vh;
+  margin:0;
+  color:#4A4A6A;
+}
+.page-wrap{
+  min-height:calc(100vh - 120px);
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
-  color:#4A4A6A;
+  padding:40px 16px;
 }
 .guest-card{
   background:rgba(255,255,255,.92);
@@ -53,22 +59,9 @@ input:focus{
   border-color:#FF9EC4;
   box-shadow:0 0 0 4px rgba(255,158,196,.15);
 }
-.anime-btn{
-  background:linear-gradient(135deg,#FF9EC4,#B39DDB);
-  color:#fff;
-  border-radius:9999px;
-  padding:12px 32px;
-  font-weight:600;
-  box-shadow:0 4px 15px rgba(255,158,196,.4);
-  border:none;
-  cursor:pointer;
-  width:100%;
-  transition:all .3s;
-}
-.anime-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,158,196,.6)}
 .petal{
   position:fixed;top:-10px;color:#FFB6D5;font-size:16px;pointer-events:none;
-  animation:fall linear infinite;
+  animation:fall linear infinite;z-index:1;
 }
 @keyframes fall{
   0%{transform:translateY(-10px) rotate(0);opacity:0}
@@ -84,13 +77,20 @@ input:focus{
 <div class="petal" style="left:70%;animation-duration:14s;animation-delay:3s">🌸</div>
 <div class="petal" style="left:90%;animation-duration:16s;animation-delay:4s">🌸</div>
 
-<div class="guest-card">
-<a href="/" class="block text-center mb-6">
-<div class="text-3xl mb-2">🌸</div>
-<div class="text-2xl font-bold" style="font-family:'ZCOOL KuaiLe';color:#FF9EC4">樱花云</div>
-<div class="text-xs mt-1" style="color:#B39DDB">二次元专属 IDC 平台</div>
-</a>
-{{ $slot }}
+{{-- 主内容区（flex 居中） --}}
+<div class="page-wrap">
+    <div class="guest-card">
+        <a href="/" class="block text-center mb-6">
+            <div class="text-3xl mb-2">🌸</div>
+            <div class="text-2xl font-bold" style="font-family:'ZCOOL KuaiLe';color:#FF9EC4">樱花云</div>
+            <div class="text-xs mt-1" style="color:#B39DDB">二次元专属 IDC 平台</div>
+        </a>
+        {{ $slot }}
+    </div>
 </div>
+
+{{-- Footer（独立于 flex 容器外，在页面底部） --}}
+@include('components.site-footer')
+
 </body>
 </html>
