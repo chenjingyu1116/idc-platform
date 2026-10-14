@@ -45,6 +45,8 @@ require __DIR__.'/auth.php';
 Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
 Route::get('/announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcements.show');
 Route::get('/kb', [KbController::class, 'index'])->name('kb.index');
+Route::get('/kb/category/{category}', [KbController::class, 'category'])->name('kb.category');
+Route::get('/kb/article/{article}', [KbController::class, 'show'])->name('kb.show');
 Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');
 
 /* ═══ 需要登录 ═══ */

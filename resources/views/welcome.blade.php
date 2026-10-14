@@ -32,9 +32,9 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
 <a href="/" class="flex items-center gap-2"><span class="text-2xl">🌸</span><span class="text-xl font-bold" style="font-family:'ZCOOL KuaiLe';color:#FF9EC4">樱花云</span></a>
 <div class="hidden md:flex items-center gap-6 text-sm font-semibold">
-<a href="#products" class="hover:text-pink-500 transition">🎀 产品</a>
-<a href="#" class="hover:text-pink-500 transition">💌 工单</a>
-<a href="#" class="hover:text-pink-500 transition">📖 帮助</a>
+<a href="{{ route('orders.index') }}" class="hover:text-pink-500 transition">🎀 产品</a>
+<a href="{{ auth()->check() ? route('client.tickets.index') : route('login') }}" class="hover:text-pink-500 transition">💌 工单</a>
+<a href="{{ route('kb.index') }}" class="hover:text-pink-500 transition">📖 帮助</a>
 </div>
 <div class="flex items-center gap-3 text-sm">
 @auth
