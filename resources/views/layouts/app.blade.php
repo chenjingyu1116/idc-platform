@@ -20,6 +20,7 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 @keyframes fall{0%{transform:translateY(-10px) rotate(0);opacity:0}10%{opacity:.7}100%{transform:translateY(105vh) rotate(360deg);opacity:0}}
 .nav-anime{background:rgba(255,255,255,.9);backdrop-filter:blur(16px);border-bottom:2px solid rgba(255,158,196,.25)}
 </style>
+@include("components.theme-vars")
 </head>
 <body>
 <div class="petal" style="left:5%;animation-duration:12s">🌸</div>
@@ -65,6 +66,7 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 </div>
 </div>
 <div class="flex items-center gap-3 text-sm">
+@include("components.theme-switcher")
 <span class="px-3 py-1 rounded-full text-xs" style="background:rgba(168,216,255,.3);color:#4A6FA5">💴 ¥{{ auth()->user()?->balance ?? 0 }}</span>
 <form method="POST" action="{{ route('logout') }}" class="inline">@csrf
 <button type="submit" class="anime-btn-soft text-xs">退出</button>

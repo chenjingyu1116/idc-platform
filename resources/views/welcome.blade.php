@@ -19,6 +19,8 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 .floaty{animation:float 4s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 </style>
+@include("components.theme-vars")
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
 <div class="petal" style="left:5%;animation-duration:14s">🌸</div>
@@ -128,5 +130,6 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 
 
 @include("components.site-footer")
+@include("components.theme-switcher")
 </body>
 </html>

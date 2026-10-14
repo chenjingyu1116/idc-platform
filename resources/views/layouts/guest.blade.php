@@ -69,12 +69,18 @@ input:focus{
   100%{transform:translateY(105vh) rotate(360deg);opacity:0}
 }
 </style>
+@include("components.theme-vars")
 </head>
 <body>
+<div class="fixed top-4 right-4 z-50">@include("components.theme-switcher")</div>
 <div class="petal" style="left:10%;animation-duration:12s">🌸</div>
+<div class="fixed top-4 right-4 z-50">@include("components.theme-switcher")</div>
 <div class="petal" style="left:30%;animation-duration:15s;animation-delay:2s">🌸</div>
+<div class="fixed top-4 right-4 z-50">@include("components.theme-switcher")</div>
 <div class="petal" style="left:50%;animation-duration:13s;animation-delay:1s">🌸</div>
+<div class="fixed top-4 right-4 z-50">@include("components.theme-switcher")</div>
 <div class="petal" style="left:70%;animation-duration:14s;animation-delay:3s">🌸</div>
+<div class="fixed top-4 right-4 z-50">@include("components.theme-switcher")</div>
 <div class="petal" style="left:90%;animation-duration:16s;animation-delay:4s">🌸</div>
 
 {{-- 主内容区（flex 居中） --}}
