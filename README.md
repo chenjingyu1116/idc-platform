@@ -1,59 +1,196 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+cd ~/idc-platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+cat > README.md << 'README_EOF'
+# 🌸 樱花云 · 二次元 IDC 云管理平台
 
-## About Laravel
+> 一个基于 Laravel 12 的二次元动漫风格 IDC 云管理系统，支持用户自助购买、余额支付、工单、代理分销、上游 API 自动开通，并提供完整的管理后台。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![Laravel](https://img.shields.io/badge/Laravel-12.x-red)
+![PHP](https://img.shields.io/badge/PHP-8.4-blue)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38bdf8)
+![License](https://img.shields.io/badge/License-MIT-green)
+![UI](https://img.shields.io/badge/UI-二次元樱花主题-ff9ec4)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📖 项目简介
 
-## Learning Laravel
+**樱花云** 是一个面向中小型 IDC 服务商的完整云管理平台。系统采用 **Laravel 12** 构建，前端使用 **Blade + Tailwind CSS**，整体 UI 采用 **二次元樱花主题**（粉紫渐变、樱花飘落、圆角卡片、萌系图标）。
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+系统后端采用 **适配器模式** 对接上游 API，可灵活切换手动交付或自动开通，方便接入 Novaix、IDCsmart 等上游系统。所有业务模块均已完整实现。
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## ✨ 功能特性
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🧑‍💼 客户端
+- 用户注册 / 登录 / 邮箱验证 / 密码找回
+- 二次元风格官网首页 + 产品列表
+- 余额支付下单，自动生成服务
+- 我的服务：查看 IP、账号、密码，支持续费 / 暂停 / 恢复
+- 在线充值（提交申请，管理员审核）
+- 工单系统：提交工单、查看回复
+- 通知中心：系统通知、订单通知
+- 优惠券：领取与使用
+- 代理中心：推荐码、返佣记录、提现申请
+- 会员等级：消费累积、折扣特权
 
-### Premium Partners
+### 👑 管理后台
+- 仪表盘：用户数、订单数、收入、服务状态
+- 资源管理：手动分配 IP / 账号 / 密码，支持上游自动开通
+- 充值审核：批准用户充值申请，自动入账
+- 上游管理：配置 Novaix / IDCsmart / HTTP 通用 API，支持连接测试
+- 产品映射：本地产品与上游产品 ID 绑定
+- 开通日志：记录每一次 API 调用与结果
+- 报表统计：收入走势、订单走势、新增用户、热门产品
+- 系统监控：订单、服务、活跃服务统计，系统信息
+- 系统设置：站点名称、SEO、邮件、短信、支付等配置
+- 公告管理：发布 / 编辑 / 删除公告
+- 知识库管理：分类、文章管理
+- 支付配置：易支付、支付宝、微信、余额支付配置
+- 用户管理：查看 / 编辑用户，调整余额、权限
+- 工单管理：查看 / 回复 / 关闭工单
+- 优惠券管理：创建、编辑、删除优惠券
+- 代理管理：查看代理列表、提现审核
+- 会员等级：配置等级门槛、折扣、积分倍率
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 🔌 开发者
+- RESTful API（`/api/v1/me`、`/api/v1/orders`、`/api/v1/services`、`/api/v1/tokens`）
+- API Token 管理：生成 / 删除 Token，支持 scope
+- SEO 优化：自动生成 `sitemap.xml`、`robots.txt`
+- 站内搜索：支持产品、公告、知识库文章
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🛠 技术栈
 
-## Code of Conduct
+| 层级 | 技术 |
+|------|------|
+| 后端框架 | Laravel 12 |
+| 编程语言 | PHP 8.4 |
+| 数据库 | SQLite（默认）/ MySQL（可切换） |
+| 前端 | Blade + Tailwind CSS（CDN） |
+| 认证 | Laravel Breeze |
+| 队列 | Sync（可切换 Redis） |
+| 部署 | Docker（推荐） |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🚀 快速开始
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 1. 克隆项目
+```bash
+git clone https://github.com/your-username/idc-platform.git
+cd idc-platform
+---
 
-## License
+## 🗺️ 未来规划（Roadmap）
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 📦 后续开发批次
+
+| 批次 | 模块 | 说明 | 状态 |
+|------|------|------|------|
+| B9 | 邮件通知系统 | 下单、开通、续费、到期、工单自动发邮件，支持 SMTP / 腾讯云 / 阿里云邮件推送 | ⏳ |
+| B10 | Redis 队列 + Horizon | 队列异步化，开通任务不阻塞用户请求，可视化监控队列状态 | ⏳ |
+| B11 | Docker Compose 一键部署 | 集成 Nginx + PHP-FPM + MySQL + Redis，`docker-compose up -d` 即上线 | ⏳ |
+| B12 | 移动端 / 小程序 | iOS / Android App，微信小程序 / 公众号商城 | ⏳ |
+| B13 | 工单附件 + 富文本 | 支持截图、日志、文件上传，回复支持富文本 | ⏳ |
+| B14 | 定时任务可视化 | 面板化配置 Cron（账单生成、到期提醒、自动续费） | ⏳ |
+| B15 | 发票管理 | 增值税普票 / 专票，电子发票申请与下载 | ⏳ |
+| B16 | 白标 / OEM | 允许代理商用自定义域名、Logo、品牌色开分站 | ⏳ |
+
+### 🚀 高级功能扩展
+
+#### 资源与运维
+- **多租户隔离**：企业客户独立资源池、独立账单
+- **VPC + 安全组**：私有网络、访问控制
+- **快照备份 + 一键恢复**：实例级数据保护
+- **资源编排**：模板化批量开通
+- **混合云管理**：统一纳管阿里云 / 腾讯云 / 华为云
+- **自动扩缩容**：按负载弹性伸缩
+
+#### 计费增强
+- **按量计费**：小时 / 秒级计费
+- **预留实例 + 竞价实例**
+- **成本分析与优化建议**
+- **多币种支持**：USD / HKD / CNY
+- **企业合同 + SLA 管理**
+- **集中账单**：多子账号合并结算
+- **采购审批流程**
+
+#### 智能化
+- **AI 客服机器人**：自动回答常见问题
+- **智能工单分类**：自动派单
+- **资源用量预测**：推荐升级 / 降级
+- **异常流量识别**：自动告警
+- **月度报告自动生成**
+
+#### 开发者生态
+- **开放 API 文档站**：Swagger UI 自动生成
+- **API 沙箱环境**：测试用
+- **Webhook 订阅**：订单 / 开通 / 到期事件推送
+- **SDK 多语言**：PHP / Python / Node.js / Go
+- **Postman 集合**：一键导入
+
+#### 运营与增长
+- **白标 / OEM 分站**
+- **自定义域名绑定**
+- **用户行为分析**
+- **A/B 测试**：产品定价、页面测试
+- **NPS 满意度评分**
+- **多级分销**：二级 / 三级代理
+- **会员积分体系**：兑换、抽奖、签到
+
+#### 合规与安全
+- **等保三级对接**
+- **ICP 备案管理**
+- **数据脱敏**
+- **操作留痕 + 审计可视化**
+- **敏感操作二次确认**
+- **用户数据导出 / 删除**（GDPR）
+- **密钥轮换管理**
+- **合规报告自动生成**
+- **IP 黑白名单 + 访问控制**
+- **限流防刷**（登录、下单、API）
+- **双因素认证**（Google Authenticator）
+
+#### 监控与高可用
+- **日志聚合**（ELK）
+- **APM 监控 + 告警**（Sentry / SkyWalking）
+- **消息队列**（RabbitMQ / Kafka）
+- **缓存集群**（Redis 主从）
+- **数据库慢查询分析**
+- **缓存命中率监控**
+- **灾备切换**
+- **环境隔离**（生产 / 测试 / 开发）
+
+#### 集成与通知
+- **Telegram Bot 通知**
+- **钉钉 / 企业微信机器人**
+- **Slack 通知**
+- **微信公众号模板消息**
+- **短信通知**（腾讯云 / 阿里云 / 云片）
+
+---
+
+## 🤝 参与贡献
+
+欢迎提交 Issue 或 Pull Request。
+
+1. Fork 本仓库
+2. 创建分支 `git checkout -b feature/your-feature`
+3. 提交改动 `git commit -m 'feat: xxx'`
+4. 推送分支 `git push origin feature/your-feature`
+5. 提交 Pull Request
+
+---
+
+## 📞 联系方式
+
+- 项目地址：https://github.com/your-username/idc-platform
+- 问题反馈：提交 Issue
+- 商业合作：联系作者
+
+---
+
+**🌸 樱花云 · 让 IDC 管理也能如此可爱！**
