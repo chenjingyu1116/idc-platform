@@ -105,7 +105,7 @@ html { scroll-behavior: smooth; }
 <div class="flex justify-between items-center">
 
     {{-- Logo --}}
-    <a href="{{ route('home') }}" class="flex items-center gap-2">
+    <a href="/" class="flex items-center gap-2" title="返回首页">
         <span class="text-2xl">🌸</span>
         <span class="text-xl font-bold" style="font-family:'ZCOOL KuaiLe';color:#FF9EC4">樱花云</span>
     </a>

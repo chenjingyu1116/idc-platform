@@ -32,9 +32,18 @@ use Illuminate\Support\Facades\Route;
 
 /* ═══ 首页 ═══ */
 Route::get('/', function () {
-    return auth()->check() ? redirect()->route('orders.index') : view('welcome');
+    if (!auth()->check()) {
+        return view('welcome');
+    }
+    return auth()->user()->is_admin
+        ? redirect()->route('admin.dashboard')
+        : redirect()->route('orders.index');
 })->name('home');
 
+// 官网首页（无论是否登录都可以看）
+Route::get('/welcome', function () {
+    return view('welcome');
+})->name('welcome');
 Route::get('/dashboard', function () {
     return redirect()->route('orders.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
