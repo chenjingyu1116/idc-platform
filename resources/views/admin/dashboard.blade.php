@@ -32,12 +32,12 @@
     <div class="anime-card p-5 text-center">
         <div class="text-3xl mb-1">👥</div>
         <div class="text-xs text-gray-500">总用户</div>
-        <div class="text-2xl font-bold" style="color:#FF9EC4">{{ $stats['users'] }}</div>
+        <div class="text-2xl font-bold counter-num" data-target="{{ $stats["users"] }}" style="color:#FF9EC4">0</div>
     </div>
     <div class="anime-card p-5 text-center">
         <div class="text-3xl mb-1">📦</div>
         <div class="text-xs text-gray-500">总订单</div>
-        <div class="text-2xl font-bold" style="color:#A8D8FF">{{ $stats['orders'] }}</div>
+        <div class="text-2xl font-bold counter-num" data-target="{{ $stats["orders"] }}" style="color:#A8D8FF">0</div>
     </div>
     <div class="anime-card p-5 text-center">
         <div class="text-3xl mb-1">💰</div>
@@ -47,12 +47,12 @@
     <div class="anime-card p-5 text-center">
         <div class="text-3xl mb-1">✅</div>
         <div class="text-xs text-gray-500">已激活</div>
-        <div class="text-2xl font-bold" style="color:#7FD8BE">{{ $stats['active'] }}</div>
+        <div class="text-2xl font-bold counter-num" data-target="{{ $stats["active"] }}" style="color:#7FD8BE">0</div>
     </div>
     <div class="anime-card p-5 text-center">
         <div class="text-3xl mb-1">⏳</div>
         <div class="text-xs text-gray-500">待分配</div>
-        <div class="text-2xl font-bold" style="color:#FFB6D5">{{ $stats['pending'] }}</div>
+        <div class="text-2xl font-bold counter-num" data-target="{{ $stats["pending"] }}" style="color:#FFB6D5">0</div>
     </div>
 </div>
 

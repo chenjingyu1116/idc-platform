@@ -25,6 +25,7 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 .nav-link-admin{color:#8B6BB1}
 .nav-link-admin:hover{background:rgba(179,157,219,.15);color:var(--purple)}
 </style>
+        <link rel="stylesheet" href="/css/anime-visual.css">
 </head>
 <body>
 
@@ -129,5 +130,6 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 
 @include('components.toast')
 @include('components.loading')
+<script src="/js/anime-visual.js"></script>
 </body>
 </html>
