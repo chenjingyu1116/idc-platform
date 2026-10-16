@@ -113,8 +113,27 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/announcements/{announcement}', [AAnn::class, 'destroy'])->name('announcements.destroy');
 
         Route::get('/kb', [AKb::class, 'index'])->name('kb.index');
+        Route::get('/kb/category/create', [AKb::class, 'createCategory'])->name('kb.createCategory');
+        Route::post('/kb/category', [AKb::class, 'storeCategory'])->name('kb.storeCategory');
+        Route::get('/kb/article/create', [AKb::class, 'createArticle'])->name('kb.createArticle');
+        Route::post('/kb/article', [AKb::class, 'storeArticle'])->name('kb.storeArticle');
+        Route::delete('/kb/article/{article}', [AKb::class, 'destroyArticle'])->name('kb.destroyArticle');
+
+        // KB 完整 CRUD
         Route::get('/agents', [AAgent::class, 'index'])->name('agents.index');
         Route::get('/coupons', [ACoupon::class, 'index'])->name('coupons.index');
+
+        // 优惠券完整 CRUD
+        Route::get('/coupons/create', [ACoupon::class, 'create'])->name('coupons.create');
+        Route::post('/coupons', [ACoupon::class, 'store'])->name('coupons.store');
+        Route::delete('/coupons/{coupon}', [ACoupon::class, 'destroy'])->name('coupons.destroy');
+
+        // 知识库完整 CRUD
+
+        // 代理提现管理
+        Route::get('/agents/withdrawals', [AAgent::class, 'withdrawals'])->name('agents.withdrawals');
+        Route::post('/agents/withdrawals/{withdrawal}/approve', [AAgent::class, 'approveWithdrawal'])->name('agents.withdrawals.approve');
+        Route::post('/agents/withdrawals/{withdrawal}/reject', [AAgent::class, 'rejectWithdrawal'])->name('agents.withdrawals.reject');
         Route::get('/member-levels', [AMember::class, 'index'])->name('member-levels.index');
         // 审计日志
         Route::get('/audit-logs', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit-logs.index');

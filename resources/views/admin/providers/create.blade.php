@@ -1,44 +1,45 @@
 @extends('layouts.app')
 @section('content')
 <div class="max-w-2xl mx-auto">
-<a href="{{ route('admin.providers.index') }}" class="text-sm hover:text-pink-500" style="color:#9CA3AF">← 返回上游列表</a>
-<h1 class="text-3xl font-bold mt-4 mb-8" style="font-family:'ZCOOL KuaiLe';color:#B39DDB">🌸 添加上游</h1>
+<h1 class="text-2xl font-bold mb-6">🔌 添加上游</h1>
+<form method="POST" action="{{ route('admin.providers.store') }}" class="anime-card rounded-2xl p-6 space-y-4">@csrf
 
-<form method="POST" action="{{ route('admin.providers.store') }}" class="anime-card p-8 space-y-5">
-@csrf
 <div>
-<label class="block text-sm mb-2" style="color:#7A7A9A">🏷️ 名称</label>
-<input type="text" name="name" placeholder="例如：Novaix 主控" class="w-full" required>
+<label class="block text-sm font-semibold mb-1" style="color:#4A4A6A">名称</label>
+<input type="text" name="name" class="w-full px-4 py-2 rounded-2xl border-2" style="border-color:#FFD1E8;background:rgba(255,245,250,.5);outline:none" required>
 </div>
+
 <div>
-<label class="block text-sm mb-2" style="color:#7A7A9A">🔧 驱动类型</label>
-<select name="driver" class="w-full">
-<option value="manual">✋ manual（手动）</option>
-<option value="http" selected>🌐 http（通用 API）</option>
-<option value="novaix">☁️ novaix</option>
-<option value="idcsmart">🎛️ idcsmart</option>
+<label class="block text-sm font-semibold mb-1" style="color:#4A4A6A">驱动类型</label>
+<select name="driver" class="w-full px-4 py-2 rounded-2xl border-2" style="border-color:#FFD1E8;background:rgba(255,245,250,.5);outline:none">
+<option value="manual">manual（手动分配）</option>
+<option value="novaix">novaix（Novaix 云平台）</option>
+<option value="bt_panel">bt_panel（宝塔面板）</option>
+<option value="http">http（通用 API）</option>
+<option value="idcsmart">idcsmart</option>
 </select>
-<p class="text-xs mt-2" style="color:#9CA3AF">选 http 后，系统会自动调用你配置的 API 完成开通</p>
 </div>
+
 <div>
-<label class="block text-sm mb-2" style="color:#7A7A9A">🌐 API 地址</label>
-<input type="text" name="api_url" placeholder="https://api.example.com" class="w-full">
-<p class="text-xs mt-2" style="color:#9CA3AF">上游接口的根地址，不带路径</p>
+<label class="block text-sm font-semibold mb-1" style="color:#4A4A6A">API 地址</label>
+<div class="text-xs text-gray-400 mb-2">💡 Novaix 示例：<code>http://1.2.3.4:8080</code>（部署 Novaix 后的地址）</div>
+<input type="text" name="api_url" class="w-full px-4 py-2 rounded-2xl border-2" style="border-color:#FFD1E8;background:rgba(255,245,250,.5);outline:none" placeholder="http://1.2.3.4:8080">
 </div>
+
 <div>
-<label class="block text-sm mb-2" style="color:#7A7A9A">🔑 API Key</label>
-<input type="text" name="api_key" placeholder="上游提供的 API Key" class="w-full">
+<label class="block text-sm font-semibold mb-1" style="color:#4A4A6A">API Token</label>
+<div class="text-xs text-gray-400 mb-2">💡 Novaix 后台 → 设置 → API Token，或使用管理员登录获取的 Token</div>
+<input type="text" name="api_key" class="w-full px-4 py-2 rounded-2xl border-2" style="border-color:#FFD1E8;background:rgba(255,245,250,.5);outline:none">
 </div>
+
 <div>
-<label class="block text-sm mb-2" style="color:#7A7A9A">🔒 API Secret</label>
-<input type="text" name="api_secret" placeholder="上游提供的 API Secret" class="w-full">
+<label class="block text-sm font-semibold mb-1" style="color:#4A4A6A">API Secret（Novaix 留空）</label>
+<input type="text" name="api_secret" class="w-full px-4 py-2 rounded-2xl border-2" style="border-color:#FFD1E8;background:rgba(255,245,250,.5);outline:none">
 </div>
-<div class="anime-card p-4 text-xs" style="background:rgba(168,216,255,.15)">
-📌 默认端点：<code>POST /api/v1/provision</code>、<code>POST /api/v1/suspend</code>、<code>POST /api/v1/unsuspend</code>、<code>POST /api/v1/terminate</code>、<code>GET /api/v1/products</code>、<code>GET /api/v1/ping</code>
-</div>
+
 <div class="flex justify-end gap-3 pt-4">
-<a href="{{ route('admin.providers.index') }}" class="anime-btn-soft">取消</a>
-<button type="submit" class="anime-btn">✨ 保存</button>
+<a href="{{ route('admin.providers.index') }}" class="px-4 py-2 rounded-2xl border-2" style="border-color:#FFD1E8">取消</a>
+<button type="submit" class="anime-btn">💾 保存</button>
 </div>
 </form>
 </div>

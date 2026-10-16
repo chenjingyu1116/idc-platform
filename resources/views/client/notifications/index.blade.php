@@ -1,35 +1,38 @@
 @extends('layouts.app')
-
 @section('content')
-<h1 class="text-3xl font-bold mb-8" style="font-family:'ZCOOL KuaiLe';color:#FF9EC4">🔔 通知中心</h1>
+<h1 class="text-2xl font-bold mb-6">🔔 通知中心</h1>
 
-@if($notifications->isEmpty())
-<div class="anime-card p-12 text-center">
-<div class="text-6xl mb-4">🌙</div>
-<div style="color:#9CA3AF">暂无通知～</div>
+@php
+    $items = $notifications ?? collect();
+@endphp
+
+<div class="anime-card rounded-2xl overflow-hidden">
+@forelse($items as $n)
+<div class="p-5 border-b border-pink-50 hover:bg-pink-50/30 transition flex gap-4">
+    <div class="text-2xl">
+        @if(($n->type ?? 'info') === 'success') 🌸
+        @elseif(($n->type ?? 'info') === 'warning') ⚠️
+        @elseif(($n->type ?? 'info') === 'error') ❌
+        @else 💎
+        @endif
+    </div>
+    <div class="flex-1">
+        <div class="flex justify-between items-start">
+            <div class="font-semibold">{{ $n->title ?? '通知' }}</div>
+            <div class="text-xs text-gray-400">{{ optional($n->created_at)->diffForHumans() }}</div>
+        </div>
+        <div class="text-sm text-gray-500 mt-1">{{ $n->content ?? '' }}</div>
+    </div>
 </div>
-@else
-<div class="space-y-4">
-@foreach($notifications as $n)
-<div class="anime-card p-6 {{ $n->sent_at ? '' : 'ring-2' }}" style="{{ $n->sent_at ? '' : 'ring-color:#FF9EC4' }}">
-<div class="flex justify-between items-start mb-2">
-<div class="flex items-center gap-3">
-@if(!$n->sent_at)
-<span class="w-2 h-2 rounded-full" style="background:#FF6B9E"></span>
-@endif
-<h3 class="font-bold text-lg">{{ $n->title }}</h3>
+@empty
+<div class="p-12 text-center text-gray-400">
+<div class="text-4xl mb-3">📭</div>
+<div>暂无通知</div>
 </div>
-<div class="text-xs" style="color:#9CA3AF">{{ $n->created_at->format('Y-m-d H:i') }}</div>
+@endforelse
 </div>
-<div class="text-sm leading-relaxed" style="color:#7A7A9A">{{ $n->content }}</div>
-@if(!$n->sent_at)
-<form method="POST" action="{{ route('client.notifications.read', $n) }}" class="mt-3">@csrf
-<button type="submit" class="text-xs font-semibold" style="color:#B39DDB">标记为已读 →</button>
-</form>
-@endif
-</div>
-@endforeach
-</div>
-<div class="mt-6">{{ $notifications->links() }}</div>
+
+@if(method_exists($items, 'links') && $items->hasPages())
+<div class="mt-4">{{ $items->links() }}</div>
 @endif
 @endsection

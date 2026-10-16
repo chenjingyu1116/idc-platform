@@ -21,6 +21,31 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 .nav-anime{background:rgba(255,255,255,.9);backdrop-filter:blur(16px);border-bottom:2px solid rgba(255,158,196,.25)}
 </style>
 @include("components.theme-vars")
+<style>
+body[data-theme="dark"]{background:linear-gradient(135deg,#1a1420,#1a1a2e,#201825);color:#E0E0F0}
+body[data-theme="dark"] .anime-card{background:rgba(40,30,55,.85)!important;border-color:rgba(255,158,196,.4)!important;color:#E0E0F0}
+body[data-theme="dark"] .nav-anime{background:rgba(20,15,30,.9)!important}
+body[data-theme="dark"] input,body[data-theme="dark"] textarea,body[data-theme="dark"] select{background:rgba(30,20,45,.6)!important;color:#E0E0F0!important;border-color:rgba(255,158,196,.4)!important}
+body[data-theme="dark"] table{color:#E0E0F0}
+</style>
+<script>
+(function(){
+    var t = localStorage.getItem("theme") || "light";
+    document.addEventListener("DOMContentLoaded", function(){
+        document.body.setAttribute("data-theme", t);
+        var i = document.getElementById("theme-icon");
+        if (i) i.textContent = t === "dark" ? "☀️" : "🌙";
+    });
+})();
+function __toggleTheme(){
+    var cur = document.body.getAttribute("data-theme") || "light";
+    var next = cur === "dark" ? "light" : "dark";
+    document.body.setAttribute("data-theme", next);
+    localStorage.setItem("theme", next);
+    var i = document.getElementById("theme-icon");
+    if (i) i.textContent = next === "dark" ? "☀️" : "🌙";
+}
+</script>
 </head>
 <body>
 <div class="petal" style="left:5%;animation-duration:12s">🌸</div>
@@ -72,6 +97,9 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 <button type="submit" class="anime-btn-soft text-xs">退出</button>
 </form>
 </div>
+<button onclick="__toggleTheme()" title="切换主题" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#FF9EC4,#B39DDB);color:#fff;border:none;cursor:pointer;font-size:16px">
+<span id="theme-icon">🌙</span>
+</button>
 </div>
 </nav>
 
@@ -126,5 +154,7 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
     </div>
     @endif
 </footer>
+@include("components.toast")
+@include("components.loading")
 </body>
 </html>
