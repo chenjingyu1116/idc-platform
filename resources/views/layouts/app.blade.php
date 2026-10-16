@@ -27,7 +27,12 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 </style>
         <link rel="stylesheet" href="/css/anime-visual.css">
 </head>
+@include("components.anime-theme")
 <body>
+@if(!request()->routeIs("admin.*"))
+@include("components.background-slider")
+@include("components.danmaku")
+@endif
 
 @php
     $u = auth()->user();

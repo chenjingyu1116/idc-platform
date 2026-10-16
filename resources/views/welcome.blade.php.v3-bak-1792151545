@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>樱花云 · 二次元专属云平台</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Quicksand:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+    --sakura:#FF9EC4; --sakura-2:#FFB6D5; --sky:#A8D8FF;
+    --purple:#B39DDB; --cream:#FFE5B4; --text:#4A4A6A;
+}
+*{box-sizing:border-box}
+body{
+    margin:0; min-height:100vh; overflow-x:hidden;
+    font-family:'Quicksand','Noto Sans SC',sans-serif;
+    color:var(--text);
+    background:linear-gradient(135deg,#FFF5FA 0%,#F0F5FF 50%,#FFF0F5 100%);
+    position:relative;
+}
+body::before{
+    content:''; position:fixed; inset:0;
+    background-image:
+        radial-gradient(2px 2px at 15% 25%, rgba(255,209,232,.9) 50%, transparent),
+        radial-gradient(2px 2px at 55% 65%, rgba(255,229,180,.9) 50%, transparent),
+        radial-gradient(2px 2px at 85% 15%, rgba(212,197,255,.9) 50%, transparent),
+        radial-gradient(2px 2px at 25% 75%, rgba(255,209,232,.9) 50%, transparent),
+        radial-gradient(2px 2px at 92% 55%, rgba(255,229,180,.9) 50%, transparent),
+        radial-gradient(2px 2px at 5% 50%, rgba(212,197,255,.9) 50%, transparent);
+    background-size:400px 400px;
+    animation:sparkle 8s ease-in-out infinite;
+    pointer-events:none; z-index:0; opacity:.7;
+}
+@keyframes sparkle{0%,100%{opacity:.4}50%{opacity:.9}}
+
+.petal{
+    position:fixed; top:-20px; pointer-events:none; z-index:1;
+    font-size:20px; color:#FFB6D5; opacity:.8;
+    animation:fall linear infinite;
+    filter:drop-shadow(0 0 4px rgba(255,158,196,.6));
+}
+@keyframes fall{
+    0%{transform:translateY(-20px) rotate(0);opacity:0}
+    10%{opacity:.8}
+    100%{transform:translateY(105vh) rotate(720deg);opacity:0}
+}
+
+.anime-card{
+    background:rgba(255,255,255,.88); backdrop-filter:blur(14px);
+    border:2px solid rgba(255,158,196,.3);
+    border-radius:22px; box-shadow:0 8px 32px rgba(255,158,196,.15);
+    transition:all .35s cubic-bezier(.4,0,.2,1);
+    position:relative; overflow:hidden;
+}
+.anime-card:hover{
+    border-color:rgba(255,158,196,.7);
+    box-shadow:0 12px 40px rgba(255,158,196,.3);
+    transform:translateY(-4px);
+}
+.anime-btn{
+    display:inline-block;
+    background:linear-gradient(135deg,#FF9EC4 0%,#FFB6D5 50%,#A8D8FF 100%);
+    background-size:200% 200%;
+    color:#fff; border-radius:9999px;
+    padding:14px 36px; font-weight:600;
+    box-shadow:0 6px 20px rgba(255,158,196,.4);
+    border:none; cursor:pointer; transition:all .3s;
+    animation:gradientShift 3s ease infinite;
+    text-decoration:none;
+}
+.anime-btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(255,158,196,.7)}
+@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+.anime-btn-soft{
+    display:inline-block;
+    background:rgba(255,255,255,.9); color:#FF9EC4;
+    border:2px solid #FF9EC4; border-radius:9999px;
+    padding:12px 34px; font-weight:600;
+    transition:all .3s; text-decoration:none;
+}
+.anime-btn-soft:hover{background:#FF9EC4;color:#fff;transform:translateY(-2px)}
+
+.nav-anime{
+    background:rgba(255,255,255,.85); backdrop-filter:blur(18px);
+    border-bottom:2px solid rgba(255,158,196,.25);
+    box-shadow:0 4px 20px rgba(255,158,196,.08);
+    position:sticky; top:0; z-index:50;
+}
+
+.floaty{animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+.glow-orb{
+    position:absolute; border-radius:50%;
+    filter:blur(70px); opacity:.45; pointer-events:none; z-index:0;
+}
+.glow-a{width:340px;height:340px;background:#FF9EC4;top:-100px;left:-100px;animation:float 7s ease-in-out infinite}
+.glow-b{width:280px;height:280px;background:#A8D8FF;bottom:-80px;right:5%;animation:float 9s ease-in-out infinite reverse}
+.glow-c{width:220px;height:220px;background:#B39DDB;top:40%;right:-80px;animation:float 8s ease-in-out infinite}
+
+.hero-wrap{position:relative; overflow:hidden; padding:80px 0}
+.hero-wrap #particles-canvas{position:absolute;inset:0;z-index:0;opacity:.7}
+.hero-wrap .hero-content{position:relative;z-index:2}
+
+.stat-num{
+    font-family:'ZCOOL KuaiLe',sans-serif; font-weight:800;
+    background:linear-gradient(135deg,#FF9EC4,#B39DDB);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-clip:text;
+}
+
+.section-title{
+    font-family:'ZCOOL KuaiLe',sans-serif;
+    background:linear-gradient(90deg,#FF9EC4,#B39DDB,#A8D8FF);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-clip:text;
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .7s ease-out both}
+
+@media (max-width:768px){
+    .hero-wrap{padding:40px 0}
+    .glow-orb{display:none}
+}
+</style>
+</head>
+<body>
+
+{{-- 樱花飘落 --}}
+@for($i = 0; $i < 10; $i++)
+<div class="petal" style="left:{{ ($i * 10 + 3) % 100 }}%;animation-duration:{{ 10 + ($i % 5) * 2 }}s;animation-delay:{{ $i * 1.1 }}s">{{ $i % 3 == 0 ? '🌸' : ($i % 3 == 1 ? '🌸' : '🌸') }}</div>
+@endfor
+
+{{-- 导航栏 --}}
+<nav class="nav-anime">
+<div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+        <span class="text-3xl">🌸</span>
+        <span class="text-xl font-bold" style="font-family:'ZCOOL KuaiLe';color:#FF9EC4">樱花云</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-semibold">
+        <a href="#products" class="hover:text-pink-500 transition">🎀 产品</a>
+        <a href="/announcements" class="hover:text-pink-500 transition">📢 公告</a>
+        <a href="/kb" class="hover:text-pink-500 transition">📖 帮助</a>
+    </div>
+    <div class="flex items-center gap-3">
+        @auth
+            <a href="{{ route('orders.index') }}" class="anime-btn-soft text-xs" style="padding:8px 20px">控制台</a>
+        @else
+            <a href="{{ route('login') }}" class="anime-btn-soft text-xs" style="padding:8px 20px">💗 登录</a>
+            <a href="{{ route('register') }}" class="anime-btn text-xs" style="padding:8px 20px">✨ 注册</a>
+        @endauth
+    </div>
+</div>
+</nav>
+
+{{-- ═══════════════ HERO ═══════════════ --}}
+<section class="hero-wrap">
+    <canvas id="particles-canvas"></canvas>
+    <div class="glow-orb glow-a"></div>
+    <div class="glow-orb glow-b"></div>
+    <div class="glow-orb glow-c"></div>
+
+    <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center hero-content">
+        <div class="fade-up">
+            <div class="inline-block px-4 py-1 rounded-full mb-6 text-sm font-semibold" style="background:rgba(255,158,196,.15);color:#FF6B9E">
+                ✨ 二次元专属云平台 · 樱花飘落
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-6" style="font-family:'ZCOOL KuaiLe'">
+                <span style="color:#FF9EC4">樱花云</span><br>
+                <span style="color:#B39DDB">萌系 VPS 空间</span>
+            </h1>
+            <p class="text-lg mb-8" style="color:#7A7A9A">五元起 · 免备案 · 二次元专属主题 · 7×24 萌妹客服 🎀</p>
+            <div class="flex flex-wrap gap-4">
+                <a href="{{ route('register') }}" class="anime-btn">🌸 立即体验 →</a>
+                <a href="#products" class="anime-btn-soft">了解更多</a>
+            </div>
+
+            <div class="grid grid-cols-3 gap-6 mt-12">
+                <div class="text-center">
+                    <div class="text-4xl font-bold stat-num">12000<span class="text-lg">+</span></div>
+                    <div class="text-xs mt-1" style="color:#9CA3AF">🌸 云客户</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold stat-num">99.9<span class="text-lg">%</span></div>
+                    <div class="text-xs mt-1" style="color:#9CA3AF">⚡ 在线率</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold stat-num">50<span class="text-lg">+</span></div>
+                    <div class="text-xs mt-1" style="color:#9CA3AF">💎 全球节点</div>
+                </div>
+            </div>
+        </div>
+
+        {{-- 二次元插画（SVG）--}}
+        <div class="floaty fade-up" style="animation-delay:.2s">
+            <div class="relative w-full aspect-square max-w-md mx-auto">
+                {{-- 光晕底盘 --}}
+                <div class="absolute inset-8 rounded-full" style="background:radial-gradient(circle, rgba(255,158,196,.4) 0%, transparent 70%)"></div>
+
+                <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" class="relative z-10">
+                    {{-- 背景圆环 --}}
+                    <circle cx="200" cy="200" r="170" fill="none" stroke="rgba(255,158,196,.25)" stroke-width="2"/>
+                    <circle cx="200" cy="200" r="140" fill="none" stroke="rgba(168,216,255,.3)" stroke-width="1.5" stroke-dasharray="8 8"/>
+
+                    {{-- 花瓣装饰 --}}
+                    <ellipse cx="60" cy="80" rx="16" ry="11" fill="#FFB6D5" transform="rotate(-30 60 80)" opacity=".8"/>
+                    <ellipse cx="340" cy="120" rx="14" ry="9" fill="#FFD1E8" transform="rotate(20 340 120)" opacity=".8"/>
+                    <ellipse cx="330" cy="330" rx="12" ry="8" fill="#FFB6D5" transform="rotate(-45 330 330)" opacity=".8"/>
+
+                    {{-- 三层服务器 --}}
+                    <rect x="140" y="160" width="120" height="42" rx="10" fill="#A8D8FF" stroke="#7AB8E8" stroke-width="2"/>
+                    <circle cx="162" cy="181" r="4" fill="#fff"/>
+                    <line x1="182" y1="181" x2="240" y2="181" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+
+                    <rect x="140" y="212" width="120" height="42" rx="10" fill="#FF9EC4" stroke="#FF6B9E" stroke-width="2"/>
+                    <circle cx="162" cy="233" r="4" fill="#fff"/>
+                    <line x1="182" y1="233" x2="240" y2="233" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+
+                    <rect x="140" y="264" width="120" height="42" rx="10" fill="#B39DDB" stroke="#9B86C8" stroke-width="2"/>
+                    <circle cx="162" cy="285" r="4" fill="#fff"/>
+                    <line x1="182" y1="285" x2="240" y2="285" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+
+                    {{-- 云朵 --}}
+                    <g transform="translate(200, 90)" opacity=".9">
+                        <ellipse cx="0" cy="0" rx="45" ry="22" fill="rgba(255,255,255,.95)"/>
+                        <ellipse cx="-25" cy="6" rx="22" ry="16" fill="rgba(255,255,255,.95)"/>
+                        <ellipse cx="25" cy="6" rx="28" ry="19" fill="rgba(255,255,255,.95)"/>
+                    </g>
+
+                    {{-- 粉色爱心 --}}
+                    <path d="M100,120 C100,110 110,110 110,120 C110,110 120,110 120,120 C120,130 110,140 110,140 C110,140 100,130 100,120 Z" fill="#FF9EC4" opacity=".9"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ═══════════════ 四个理由 ═══════════════ --}}
+<section class="py-16" style="background:rgba(255,255,255,.5)">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold section-title mb-3">四个理由选择我们</h2>
+            <p class="text-sm" style="color:#9CA3AF">为什么大家都选择樱花云 🌸</p>
+        </div>
+        <div class="grid md:grid-cols-4 gap-6">
+            <div class="anime-card p-6 text-center">
+                <div class="text-5xl mb-4">⚡</div>
+                <h3 class="font-bold text-lg mb-2" style="color:#FF9EC4">极速 CN2 直连</h3>
+                <p class="text-sm" style="color:#7A7A9A">香港节点，低延迟，中国大陆直连体验</p>
+            </div>
+            <div class="anime-card p-6 text-center">
+                <div class="text-5xl mb-4">🛡️</div>
+                <h3 class="font-bold text-lg mb-2" style="color:#A8D8FF">DDOS 高防保护</h3>
+                <p class="text-sm" style="color:#7A7A9A">所有节点均配备 DDOS 高防，保障业务稳定</p>
+            </div>
+            <div class="anime-card p-6 text-center">
+                <div class="text-5xl mb-4">💎</div>
+                <h3 class="font-bold text-lg mb-2" style="color:#B39DDB">60 秒极速开通</h3>
+                <p class="text-sm" style="color:#7A7A9A">付款后 60 秒自动开通，无需等待人工审核</p>
+            </div>
+            <div class="anime-card p-6 text-center">
+                <div class="text-5xl mb-4">🎀</div>
+                <h3 class="font-bold text-lg mb-2" style="color:#FFB6D5">萌妹 7×24 客服</h3>
+                <p class="text-sm" style="color:#7A7A9A">7×24 在线客服，工单 2 小时内回复</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ═══════════════ 产品 ═══════════════ --}}
+<section id="products" class="py-20">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold section-title mb-3">我们的云产品</h2>
+            <p class="text-sm" style="color:#9CA3AF">每一台都用心呵护 🌸</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            @foreach(\App\Models\Product::where('is_active', true)->take(6)->get() as $product)
+            <div class="anime-card p-6">
+                <div class="text-center mb-4">
+                    <div class="text-5xl mb-2">🌸</div>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-center" style="color:#FF9EC4">{{ $product->name }}</h3>
+                <p class="text-sm text-center mb-4" style="color:#7A7A9A">{{ $product->description ?? '优质云服务' }}</p>
+                <div class="text-center mb-6">
+                    <span class="text-3xl font-bold" style="color:#B39DDB">¥{{ $product->price }}</span>
+                    <span class="text-sm" style="color:#9CA3AF">/ 月</span>
+                </div>
+                <div class="space-y-1 text-xs mb-6" style="color:#7A7A9A">
+                    <div class="flex justify-between"><span>CPU</span><span>{{ $product->config['cpu'] ?? '1核' }}</span></div>
+                    <div class="flex justify-between"><span>内存</span><span>{{ $product->config['memory'] ?? '1G' }}</span></div>
+                    <div class="flex justify-between"><span>硬盘</span><span>{{ $product->config['disk'] ?? '20G' }}</span></div>
+                    <div class="flex justify-between"><span>带宽</span><span>{{ $product->config['bandwidth'] ?? '20M' }}</span></div>
+                </div>
+                <a href="{{ auth()->check() ? route('orders.index') : route('login') }}" class="anime-btn w-full text-center text-sm" style="padding:10px 20px">立即购买 →</a>
+            </div>
+            @endforeach
+        </div>
+
+        <div class="text-center mt-10">
+            <a href="{{ auth()->check() ? route('orders.index') : route('login') }}" class="anime-btn-soft">查看全部产品 →</a>
+        </div>
+    </div>
+</section>
+
+{{-- ═══════════════ 三步开始 ═══════════════ --}}
+<section class="py-16" style="background:rgba(255,255,255,.5)">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold section-title mb-3">三步开始你的云之旅</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="anime-card p-8 text-center">
+                <div class="text-6xl font-bold mb-4" style="color:#FF9EC4;font-family:'ZCOOL KuaiLe'">01</div>
+                <h3 class="font-bold text-lg mb-2">注册账号</h3>
+                <p class="text-sm" style="color:#7A7A9A">1 分钟完成注册，无需繁琐流程</p>
+            </div>
+            <div class="anime-card p-8 text-center">
+                <div class="text-6xl font-bold mb-4" style="color:#A8D8FF;font-family:'ZCOOL KuaiLe'">02</div>
+                <h3 class="font-bold text-lg mb-2">选购产品</h3>
+                <p class="text-sm" style="color:#7A7A9A">选择适合的套餐，加入购物车结算</p>
+            </div>
+            <div class="anime-card p-8 text-center">
+                <div class="text-6xl font-bold mb-4" style="color:#B39DDB;font-family:'ZCOOL KuaiLe'">03</div>
+                <h3 class="font-bold text-lg mb-2">自动开通</h3>
+                <p class="text-sm" style="color:#7A7A9A">付款后 60 秒自动开通，无需等待</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ═══════════════ CTA ═══════════════ --}}
+<section class="py-20" style="background:linear-gradient(135deg, #FF9EC4 0%, #B39DDB 100%)">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6 text-white">
+        <div>
+            <div class="text-4xl font-bold mb-2" style="font-family:'ZCOOL KuaiLe'">🌸 准备好开始了吗？</div>
+            <div class="text-sm opacity-90">3 分钟注册 · 60 秒开通 · 五元起售 · 随时可退</div>
+        </div>
+        <div class="flex gap-4">
+            <a href="{{ route('register') }}" class="px-8 py-3 rounded-full font-semibold" style="background:#fff;color:#FF9EC4">✨ 注册会员</a>
+            <a href="{{ route('login') }}" class="px-8 py-3 rounded-full font-semibold" style="border:2px solid #fff;color:#fff">💗 登录用户</a>
+        </div>
+    </div>
+</section>
+
+{{-- ═══════════════ 底部 ICP + 联系方式 ═══════════════ --}}
+@include('components.site-footer')
+
+{{-- ═══════════════ 粒子背景脚本 ═══════════════ --}}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var canvas = document.getElementById('particles-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+
+    function resize() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var particles = [];
+    for (var i = 0; i < 60; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - .5) * .7,
+            vy: (Math.random() - .5) * .7,
+            r: Math.random() * 2.5 + 1
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(255,158,196,.6)';
+        particles.forEach(function(p) {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        for (var i = 0; i < particles.length; i++) {
+            for (var j = i + 1; j < particles.length; j++) {
+                var dx = particles[i].x - particles[j].x;
+                var dy = particles[i].y - particles[j].y;
+                var d = Math.sqrt(dx * dx + dy * dy);
+                if (d < 130) {
+                    ctx.strokeStyle = 'rgba(255,158,196,' + (1 - d / 130) * .35 + ')';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(draw);
+    }
+    draw();
+});
+</script>
+
+</body>
+</html>

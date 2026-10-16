@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>{{ config('app.name', '樱花云') }} · 二次元 IDC</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--sakura:#FF9EC4;--sky:#A8D8FF;--cream:#FFE5B4;--purple:#B39DDB;--text:#4A4A6A}
+body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:linear-gradient(135deg,#FFF5FA 0%,#F0F5FF 50%,#FFF0F5 100%);color:var(--text);min-height:100vh;position:relative}
+.anime-card{background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border:2px solid rgba(255,158,196,.3);border-radius:20px;box-shadow:0 8px 32px rgba(255,158,196,.15);transition:all .3s ease}
+.anime-card:hover{border-color:rgba(255,158,196,.6);box-shadow:0 12px 40px rgba(255,158,196,.25)}
+.anime-btn{background:linear-gradient(135deg,#FF9EC4 0%,#FFB6D5 50%,#A8D8FF 100%);color:#fff;border-radius:9999px;padding:8px 24px;font-weight:600;box-shadow:0 4px 15px rgba(255,158,196,.4);border:none;cursor:pointer;transition:all .3s}
+.anime-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,158,196,.6)}
+.anime-btn-soft{background:rgba(255,255,255,.9);color:var(--sakura);border:2px solid var(--sakura);border-radius:9999px;padding:6px 20px;font-weight:600;transition:all .3s}
+.anime-btn-soft:hover{background:var(--sakura);color:#fff}
+.petal{position:fixed;top:-10px;color:#FFB6D5;font-size:16px;pointer-events:none;animation:fall linear infinite;z-index:1;opacity:.7}
+@keyframes fall{0%{transform:translateY(-10px) rotate(0);opacity:0}10%{opacity:.7}100%{transform:translateY(105vh) rotate(360deg);opacity:0}}
+.nav-anime{background:rgba(255,255,255,.9);backdrop-filter:blur(16px);border-bottom:2px solid rgba(255,158,196,.25)}
+.nav-link{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:8px;transition:all .2s;color:var(--text);white-space:nowrap}
+.nav-link:hover{background:rgba(255,158,196,.15);color:var(--sakura)}
+.nav-link-active{background:rgba(255,158,196,.2);color:var(--sakura);font-weight:600}
+.nav-link-admin{color:#8B6BB1}
+.nav-link-admin:hover{background:rgba(179,157,219,.15);color:var(--purple)}
+</style>
+        <link rel="stylesheet" href="/css/anime-visual.css">
+</head>
+<body>
+
+@php
+    $u = auth()->user();
+    $isAdmin = $u && $u->is_admin;
+    $isPublicPage = request()->routeIs('announcements.*', 'kb.*', 'welcome', 'home');
+    $isAdminPage = request()->routeIs('admin.*');
+@endphp
+
+<div class="petal" style="left:5%;animation-duration:12s">🌸</div>
+<div class="petal" style="left:25%;animation-duration:15s;animation-delay:2s">🌸</div>
+<div class="petal" style="left:50%;animation-duration:11s;animation-delay:4s">🌸</div>
+<div class="petal" style="left:75%;animation-duration:14s;animation-delay:1s">🌸</div>
+<div class="petal" style="left:92%;animation-duration:13s;animation-delay:5s">🌸</div>
+
+<nav class="nav-anime sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center flex-wrap gap-2">
+
+{{-- Logo --}}
+<div class="flex items-center gap-6 flex-wrap">
+<a href="/" class="flex items-center gap-2">
+<span class="text-2xl">🌸</span>
+<span class="text-xl font-bold" style="font-family:'ZCOOL KuaiLe';color:#FF9EC4">樱花云</span>
+</a>
+
+{{-- 客户端菜单（所有人可见）--}}
+<div class="hidden md:flex items-center gap-4 text-sm font-semibold flex-wrap">
+<a href="{{ route('announcements.index') }}" class="hover:text-pink-500">📢 公告</a>
+<a href="{{ route('orders.index') }}" class="hover:text-pink-500">🎀 产品</a>
+<a href="{{ route('cart.index') }}" class="hover:text-pink-500">🛒 购物车</a>
+<a href="{{ route('client.services.index') }}" class="hover:text-pink-500">💗 服务</a>
+<a href="{{ route('client.recharge.index') }}" class="hover:text-pink-500">💎 充值</a>
+<a href="{{ route('client.tickets.index') }}" class="hover:text-pink-500">💌 工单</a>
+<a href="{{ route('client.coupons.index') }}" class="hover:text-pink-500">🎫 券</a>
+<a href="{{ route('client.agent.index') }}" class="hover:text-pink-500">🌸 代理</a>
+<a href="{{ route('client.notifications.index') }}" class="hover:text-pink-500">🔔 通知</a>
+
+{{-- 管理员专属后台入口 --}}
+@if(auth()->check() && auth()->user()->is_admin)
+<span class="text-gray-300">|</span>
+<div class="relative group">
+<a href="{{ route('admin.dashboard') }}" class="text-purple-500 hover:text-purple-400 font-bold">
+👑 后台管理 ▾
+</a>
+<div class="absolute top-full right-0 mt-1 hidden group-hover:block bg-white shadow-xl rounded-lg py-2 w-48 z-50 border-2" style="border-color:#FFD1E8">
+<a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">📊 看板</a>
+<a href="{{ route('admin.services.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">⚙️ 资源</a>
+        <a href="{{ route('admin.products.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">📦 产品</a>
+        <a href="{{ route('admin.product-mappings.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">🔗 映射</a>
+<a href="{{ route('admin.orders.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">📦 订单</a>
+<a href="{{ route('admin.users.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">👥 用户</a>
+<a href="{{ route('admin.recharges.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">💰 充值审核</a>
+<a href="{{ route('admin.providers.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">🔌 上游</a>
+<a href="{{ route('admin.tickets.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">💌 工单</a>
+<a href="{{ route('admin.coupons.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">🎫 优惠券</a>
+<a href="{{ route('admin.agents.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">🌸 代理</a>
+<a href="{{ route('admin.announcements.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">📢 公告管理</a>
+<a href="{{ route('admin.reports.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">📊 报表</a>
+<a href="{{ route('admin.monitor.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">📡 监控</a>
+<a href="{{ route('admin.settings.index') }}" class="block px-4 py-2 hover:bg-pink-50 text-sm">⚙️ 设置</a>
+</div>
+</div>
+@endif
+</div>
+</div>
+
+{{-- 右侧：余额 + 退出 --}}
+<div class="flex items-center gap-3 text-sm">
+@auth
+<span class="px-3 py-1 rounded-full text-xs" style="background:rgba(168,216,255,.3);color:#4A6FA5">
+💴 ¥{{ auth()->user()->balance ?? 0 }}
+</span>
+<form method="POST" action="{{ route('logout') }}" class="inline">@csrf
+<button type="submit" class="anime-btn-soft text-xs">退出</button>
+</form>
+@else
+<a href="{{ route('login') }}" class="anime-btn-soft text-xs">💗 登录</a>
+<a href="{{ route('register') }}" class="anime-btn text-xs" style="padding:6px 16px">✨ 注册</a>
+@endauth
+</div>
+
+</div>
+</nav>
+
+@if(session('success'))
+<div class="max-w-7xl mx-auto px-4 mt-4">
+<div class="anime-card px-5 py-3" style="border-color:rgba(168,216,255,.6)">🌸 {{ session('success') }}</div>
+</div>
+@endif
+@if(session('error'))
+<div class="max-w-7xl mx-auto px-4 mt-4">
+<div class="anime-card px-5 py-3" style="border-color:rgba(255,107,107,.6)">⚠️ {{ session('error') }}</div>
+</div>
+@endif
+
+<main class="max-w-7xl mx-auto px-4 py-8 relative z-10">
+@yield('content')
+</main>
+
+@include('components.site-footer')
+
+@include('components.toast')
+@include('components.loading')
+<script src="/js/anime-visual.js"></script>
+</body>
+</html>
