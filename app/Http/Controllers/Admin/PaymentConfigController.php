@@ -7,53 +7,72 @@ use Illuminate\Http\Request;
 
 class PaymentConfigController extends Controller
 {
-    public function index() {
-        $configs = PaymentConfig::orderBy('sort')->get();
-        return view('admin.payments.index', compact('configs'));
+    public function index()
+    {
+        $configs = PaymentConfig::latest()->paginate(20);
+        return view('admin.payment-configs.index', compact('configs'));
     }
-    public function create() {
-        return view('admin.payments.create');
+
+    public function create()
+    {
+        return view('admin.payment-configs.create');
     }
-    public function store(Request $request) {
+
+    public function store(Request $request)
+    {
         $v = $request->validate([
-            'name' => 'required|string|max:255',
-            'driver' => 'required|string|max:50',
-            'api_url' => 'nullable|string',
-            'pid' => 'nullable|string',
-            'key_secret' => 'nullable|string',
-            'sort' => 'nullable|integer',
+            'name'    => 'required|string|max:255',
+            'driver'  => 'required|string|in:epay',
+            'api_url' => 'required|url',
+            'pid'     => 'required|string',
+            'key'     => 'required|string',
         ]);
+
         PaymentConfig::create([
-            'name' => $v['name'],
-            'driver' => $v['driver'],
-            'api_url' => $v['api_url'] ?? null,
-            'pid' => $v['pid'] ?? null,
-            'key_secret' => $v['key_secret'] ?? null,
-            'notify_url' => url('/payment/notify'),
-            'return_url' => url('/payment/return'),
-            'sort' => $v['sort'] ?? 0,
+            'name'    => $v['name'],
+            'driver'  => $v['driver'],
+            'api_url' => $v['api_url'],
+            'credentials' => json_encode(['pid' => $v['pid'], 'key' => $v['key']]),
             'is_active' => true,
         ]);
-        return redirect()->route('admin.payments.index')->with('success', '支付渠道已添加');
+
+        return redirect()->route('admin.payment-configs.index')->with('success', '支付配置已添加');
     }
-    public function edit(PaymentConfig $payment) {
-        return view('admin.payments.edit', compact('payment'));
+
+    public function edit($id)
+    {
+        $config = PaymentConfig::findOrFail($id);
+        return view('admin.payment-configs.edit', compact('config'));
     }
-    public function update(Request $request, PaymentConfig $payment) {
+
+    public function update(Request $request, $id)
+    {
+        $config = PaymentConfig::findOrFail($id);
         $v = $request->validate([
-            'name' => 'required|string',
-            'driver' => 'required|string',
-            'api_url' => 'nullable|string',
-            'pid' => 'nullable|string',
-            'key_secret' => 'nullable|string',
+            'name'    => 'required|string|max:255',
+            'api_url' => 'required|url',
+            'pid'     => 'nullable|string',
+            'key'     => 'nullable|string',
             'is_active' => 'boolean',
-            'sort' => 'nullable|integer',
         ]);
-        $payment->update($v);
-        return redirect()->route('admin.payments.index')->with('success', '已更新');
+
+        $cred = json_decode($config->credentials, true) ?: [];
+        if (!empty($v['pid'])) $cred['pid'] = $v['pid'];
+        if (!empty($v['key'])) $cred['key'] = $v['key'];
+
+        $config->update([
+            'name' => $v['name'],
+            'api_url' => $v['api_url'],
+            'credentials' => json_encode($cred),
+            'is_active' => $request->boolean('is_active'),
+        ]);
+
+        return redirect()->route('admin.payment-configs.index')->with('success', '支付配置已更新');
     }
-    public function destroy(PaymentConfig $payment) {
-        $payment->delete();
-        return back()->with('success', '已删除');
+
+    public function destroy($id)
+    {
+        PaymentConfig::findOrFail($id)->delete();
+        return back()->with('success', '支付配置已删除');
     }
 }

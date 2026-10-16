@@ -5,14 +5,19 @@ use App\Models\PaymentConfig;
 
 class PaymentFactory
 {
-    public static function make(PaymentConfig $config): PaymentInterface {
-        return match ($config->driver) {
-            'epay', 'alipay', 'wechat' => new EpayService($config),
-            default => new EpayService($config),
-        };
-    }
+    public static function make(?PaymentConfig $config): ?PaymentInterface
+    {
+        if (!$config) return null;
+        $cred = $config->credentials ?? [];
+        if (is_string($cred)) $cred = json_decode($cred, true) ?: [];
 
-    public static function getActiveConfigs() {
-        return PaymentConfig::where('is_active', true)->orderBy('sort')->get();
+        return match ($config->driver) {
+            'epay' => new EpayGateway([
+                'api_url' => $config->api_url,
+                'pid'     => $cred['pid'] ?? '',
+                'key'     => $cred['key'] ?? '',
+            ]),
+            default => null,
+        };
     }
 }

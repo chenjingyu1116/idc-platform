@@ -4,12 +4,14 @@ namespace App\Jobs;
 
 use App\Models\ProvisionLog;
 use App\Models\Service;
+use App\Notifications\ServiceProvisioned;
 use App\Services\Providers\ProviderFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Notification;
 
 class ProvisionService implements ShouldQueue
 {
@@ -56,6 +58,22 @@ class ProvisionService implements ShouldQueue
                     'expires_at'          => now()->addMonth(),
                 ]);
             }
+
+            // 通知用户（数据库 + 邮件）
+            try {
+                if ($this->service->user) {
+                    Notification::send(
+                        $this->service->user,
+                        new ServiceProvisioned($this->service)
+                    );
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('开通通知发送失败: ' . $e->getMessage());
+            }
+        } else {
+            // 失败时重试
+            $this->service->update(['status' => 'pending']);
+            throw new \Exception('开通失败: ' . ($result['message'] ?? '未知错误'));
         }
     }
 }

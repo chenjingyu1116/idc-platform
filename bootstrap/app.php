@@ -10,6 +10,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->validateCsrfTokens(except: ['payment/notify', 'payment/return']);
         $middleware->alias([
             'admin' => \App\Http\Middleware\IsAdmin::class,
             'api.token' => \App\Http\Middleware\ApiTokenAuth::class,

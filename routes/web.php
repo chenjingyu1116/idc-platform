@@ -126,6 +126,11 @@ Route::get('/dashboard', [ADash::class, 'index'])->name('dashboard');
         Route::get('/product-mappings', [AMapping::class, 'index'])->name('product-mappings.index');
 
         Route::get('/payment-configs', [APayment::class, 'index'])->name('payment-configs.index');
+        Route::get('/payment-configs/create', [APayment::class, 'create'])->name('payment-configs.create');
+        Route::post('/payment-configs', [APayment::class, 'store'])->name('payment-configs.store');
+        Route::get('/payment-configs/{id}/edit', [APayment::class, 'edit'])->name('payment-configs.edit');
+        Route::put('/payment-configs/{id}', [APayment::class, 'update'])->name('payment-configs.update');
+        Route::delete('/payment-configs/{id}', [APayment::class, 'destroy'])->name('payment-configs.destroy');
         Route::get('/payment-configs/{id}/edit', [APayment::class, 'edit'])->name('payment-configs.edit');
         Route::put('/payment-configs/{id}', [APayment::class, 'update'])->name('payment-configs.update');
 
@@ -263,3 +268,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // ─── 管理员账号 ───
     Route::get("/admins", [\App\Http\Controllers\Admin\AdminUserController::class, "index"])->name("admins.index");
+
+/* ═══ 支付 ═══ */
+Route::middleware(['auth'])->group(function () {
+    Route::get('/payment/checkout/{order}', [\App\Http\Controllers\Payment\PaymentController::class, 'checkout'])->name('payment.checkout');
+    Route::post('/payment/pay/{order}', [\App\Http\Controllers\Payment\PaymentController::class, 'pay'])->name('payment.pay');
+});
+
+// 回调路由（无需登录、无需 CSRF）
+Route::post('/payment/notify', [\App\Http\Controllers\Payment\PaymentController::class, 'notify'])->name('payment.notify');
+Route::get('/payment/return', [\App\Http\Controllers\Payment\PaymentController::class, 'return'])->name('payment.return');
