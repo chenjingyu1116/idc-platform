@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductMapping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -26,12 +28,15 @@ class CartController extends Controller
         $items = [];
         $total = 0;
 
-        foreach ($cart as $productId => $qty) {
-            $p = Product::find($productId);
-            if (!$p || !$p->is_active) continue;
-            $subtotal = $p->price * $qty;
-            $total += $subtotal;
-            $items[] = ['product' => $p, 'qty' => $qty, 'subtotal' => $subtotal];
+        foreach ($cart as $pid => $qty) {
+            $product = Product::find($pid);
+            if ($product) {
+                $items[] = [
+                    'product'  => $product,
+                    'quantity' => (int) $qty,
+                ];
+                $total += $product->price * $qty;
+            }
         }
 
         return view('client.cart.index', compact('items', 'total'));
@@ -41,14 +46,12 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity'   => 'nullable|integer|min:1|max:10',
+            'quantity'   => 'required|integer|min:1|max:10',
         ]);
 
-        $qty = (int) ($request->quantity ?? 1);
         $cart = $this->getCart();
-        $productId = (int) $request->product_id;
-
-        $cart[$productId] = min(10, ($cart[$productId] ?? 0) + $qty);
+        $pid = (int) $request->product_id;
+        $cart[$pid] = ($cart[$pid] ?? 0) + (int) $request->quantity;
         $this->saveCart($cart);
 
         return redirect()->route('cart.index')->with('success', '已加入购物车');
@@ -58,28 +61,21 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|integer',
-            'quantity'   => 'required|integer|min:0|max:10',
+            'quantity'   => 'required|integer|min:1|max:10',
         ]);
-
         $cart = $this->getCart();
-        $productId = (int) $request->product_id;
-        $qty = (int) $request->quantity;
-
-        if ($qty <= 0) {
-            unset($cart[$productId]);
-        } else {
-            $cart[$productId] = $qty;
+        $pid = (int) $request->product_id;
+        if (isset($cart[$pid])) {
+            $cart[$pid] = (int) $request->quantity;
         }
-
         $this->saveCart($cart);
         return back()->with('success', '已更新');
     }
 
     public function remove(Request $request)
     {
-        $productId = (int) $request->product_id;
         $cart = $this->getCart();
-        unset($cart[$productId]);
+        unset($cart[(int) $request->product_id]);
         $this->saveCart($cart);
         return back()->with('success', '已移除');
     }
@@ -90,62 +86,134 @@ class CartController extends Controller
         return back()->with('success', '购物车已清空');
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
         $cart = $this->getCart();
         if (empty($cart)) {
-            return redirect()->route('cart.index')->with('error', '购物车为空');
+            return back()->with('error', '购物车为空');
         }
 
         $user = auth()->user();
-        $total = 0;
+        $originalTotal = 0;
         $items = [];
-
-        foreach ($cart as $productId => $qty) {
-            $p = Product::find($productId);
-            if (!$p || !$p->is_active) continue;
-            $total += $p->price * $qty;
-            $items[] = ['product' => $p, 'qty' => $qty];
+        foreach ($cart as $pid => $qty) {
+            $product = Product::find($pid);
+            if ($product) {
+                $items[] = ['product' => $product, 'quantity' => (int) $qty];
+                $originalTotal += $product->price * $qty;
+            }
         }
+
+        // 优惠券处理
+        $coupon = null;
+        $discount = 0;
+        if ($request->filled('coupon_code')) {
+            $coupon = Coupon::whereRaw("UPPER(code) = ?", [strtoupper(trim($request->coupon_code))])->first();
+            if (!$coupon) return back()->with('error', '优惠券不存在');
+            if (!($coupon->is_active ?? true)) return back()->with('error', '优惠券已停用');
+            if ($coupon->expires_at && $coupon->expires_at < now()) return back()->with('error', '优惠券已过期');
+            if ($coupon->total > 0 && $coupon->used >= $coupon->total) return back()->with('error', '优惠券已用完');
+            if ($coupon->min_amount > 0 && $originalTotal < $coupon->min_amount) {
+                return back()->with('error', '订单未达优惠券门槛 ¥' . $coupon->min_amount);
+            }
+            $discount = $coupon->type === 'fixed'
+                ? min($coupon->value, $originalTotal)
+                : $originalTotal * ($coupon->value / 100);
+            $discount = round($discount, 2);
+        }
+
+        $total = max(0, $originalTotal - $discount);
 
         if ($user->balance < $total) {
             return back()->with('error', "余额不足，需要 ¥{$total}，当前 ¥{$user->balance}");
         }
 
-        // 扣余额
         $user->decrement('balance', $total);
 
-        // 创建订单
-        $order = Order::create([
-            'order_no'     => 'ORD' . date('YmdHis') . strtoupper(Str::random(4)),
-            'user_id'      => $user->id,
-            'product_id'   => $items[0]['product']->id, // 主产品
-            'quantity'     => array_sum(array_column($items, 'qty')),
-            'total_amount' => $total,
-            'status'       => 'paid',
-            'paid_at'      => now(),
-        ]);
-
-        // 为每个商品创建服务
         foreach ($items as $item) {
-            foreach (range(1, $item['qty']) as $i) {
+            $product = $item['product'];
+            $qty = $item['quantity'];
+            $subtotal = $product->price * $qty;
+            $itemDiscount = $originalTotal > 0 ? round($discount * ($subtotal / $originalTotal), 2) : 0;
+            $itemTotal = $subtotal - $itemDiscount;
+
+            $order = Order::create([
+                'order_no'        => 'ORD' . date('YmdHis') . strtoupper(Str::random(4)),
+                'user_id'         => $user->id,
+                'product_id'      => $product->id,
+                'quantity'        => $qty,
+                'total_amount'    => $itemTotal,
+                'coupon_id'       => $coupon?->id,
+                'discount_amount' => $itemDiscount,
+                'status'          => 'paid',
+                'paid_at'         => now(),
+            ]);
+
+            $mapping = ProductMapping::where('product_id', $product->id)->with('provider')->first();
+            $providerType = $mapping && $mapping->provider ? $mapping->provider->driver : 'manual';
+            $providerId = $mapping && $mapping->provider ? $mapping->provider->id : null;
+
+            foreach (range(1, $qty) as $i) {
                 $service = $order->services()->create([
-                    'user_id'         => $user->id,
-                    'product_id'      => $item['product']->id,
-                    'service_type'    => 'vps',
-                    'provider_type'   => 'manual',
+                    'user_id'       => $user->id,
+                    'product_id'    => $product->id,
+                    'service_type'  => 'vps',
+                    'provider_type' => $providerType,
+                    'provider_id'   => $providerId,
                     'resource_config' => [
-                        'domain' => 'user' . $user->id . '-' . $order->id . '-' . $item['product']->id . '-' . $i . '.example.com',
+                        'domain' => 'user' . $user->id . '-' . $order->id . '-' . $i . '.example.com',
+                        'php_version' => $product->config['php_version'] ?? '82',
                     ],
-                    'status'          => 'pending',
+                    'status' => 'pending',
                 ]);
                 \App\Jobs\ProvisionService::dispatch($service);
             }
         }
 
+        if ($coupon) $coupon->increment('used');
+
         session()->forget('cart');
 
-        return redirect()->route('client.services.index')
-            ->with('success', "已下单，共 ¥{$total}，正在开通！");
+        $msg = '订单提交成功！';
+        if ($discount > 0) $msg .= "已优惠 ¥{$discount}";
+        return redirect()->route('client.services.index')->with('success', $msg);
+    }
+    public function applyCoupon(Request $request)
+    {
+        $request->validate(["code" => "required|string|max:50"]);
+
+        $code = strtoupper(trim($request->code));
+        $coupon = Coupon::whereRaw("UPPER(code) = ?", [$code])->first();
+
+        if (!$coupon) return response()->json(["success" => false, "message" => "优惠券不存在"]);
+        if (!($coupon->is_active ?? true)) return response()->json(["success" => false, "message" => "优惠券已停用"]);
+        if ($coupon->expires_at && $coupon->expires_at < now()) return response()->json(["success" => false, "message" => "优惠券已过期"]);
+        if ($coupon->total > 0 && $coupon->used >= $coupon->total) return response()->json(["success" => false, "message" => "优惠券已用完"]);
+
+        $cart = $this->getCart();
+        $originalTotal = 0;
+        foreach ($cart as $pid => $qty) {
+            $product = Product::find($pid);
+            if ($product) $originalTotal += $product->price * $qty;
+        }
+
+        if ($coupon->min_amount > 0 && $originalTotal < $coupon->min_amount) {
+            return response()->json(["success" => false, "message" => "订单未达门槛 ¥" . $coupon->min_amount]);
+        }
+
+        $discount = $coupon->type === "fixed"
+            ? min($coupon->value, $originalTotal)
+            : $originalTotal * ($coupon->value / 100);
+        $discount = round($discount, 2);
+        $total = max(0, $originalTotal - $discount);
+
+        return response()->json([
+            "success" => true,
+            "message" => "优惠券可用",
+            "coupon" => ["code" => $coupon->code, "name" => $coupon->name],
+            "original_total" => $originalTotal,
+            "discount" => $discount,
+            "total" => $total,
+        ]);
     }
 }

@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/remove', [\App\Http\Controllers\Client\CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/clear', [\App\Http\Controllers\Client\CartController::class, 'clear'])->name('cart.clear');
     Route::post('/cart/checkout', [\App\Http\Controllers\Client\CartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/cart/apply-coupon', [\App\Http\Controllers\Client\CartController::class, 'applyCoupon'])->name('cart.apply-coupon');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
     Route::get('/client/services', [CService::class, 'index'])->name('client.services.index');
@@ -160,6 +161,8 @@ Route::get('/dashboard', [ADash::class, 'index'])->name('dashboard');
 
         // KB 完整 CRUD
         Route::get('/agents', [AAgent::class, 'index'])->name('agents.index');
+        Route::get('/agents/create', [AAgent::class, 'create'])->name('agents.create');
+        Route::post('/agents', [AAgent::class, 'store'])->name('agents.store');
         Route::get('/coupons', [ACoupon::class, 'index'])->name('coupons.index');
 
         // 优惠券完整 CRUD

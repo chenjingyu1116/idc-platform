@@ -1,46 +1,55 @@
 @extends('layouts.app')
 @section('content')
-<div class="flex justify-between items-center mb-8">
-<h1 class="text-3xl font-bold" style="font-family:'ZCOOL KuaiLe';color:#FF9EC4">💗 我的服务</h1>
-<a href="{{ route('orders.index') }}" class="anime-btn-soft text-sm">+ 购买新服务</a>
-</div>
+<h1 class="text-2xl font-bold mb-6">💗 我的服务</h1>
 
-@forelse($services as $service)
-<div class="anime-card p-6 mb-4">
-<div class="flex flex-wrap justify-between items-center gap-4">
-<div class="flex items-center gap-4">
-<div class="text-3xl">🖥️</div>
-<div>
-<div class="font-bold text-lg">{{ optional($service->product)->name ?? '服务' }}</div>
-<div class="text-xs mt-1" style="color:#9CA3AF">
-订单号：{{ optional($service->order)->order_no ?? '-' }}
-</div>
-</div>
-</div>
-<div class="flex items-center gap-3">
-@if($service->status === 'active')
-<span class="px-4 py-1 rounded-full text-xs font-bold" style="background:rgba(134,239,172,.25);color:#16A34A">✓ 已激活</span>
-@elseif($service->status === 'suspended')
-<span class="px-4 py-1 rounded-full text-xs font-bold" style="background:rgba(251,191,36,.25);color:#D97706">⏸ 已暂停</span>
-@else
-<span class="px-4 py-1 rounded-full text-xs font-bold" style="background:rgba(255,158,196,.25);color:#FF6B9E">⏳ 等待分配</span>
-@endif
-<a href="{{ route('client.services.show',$service) }}" class="anime-btn-soft text-xs">查看详情 →</a>
-</div>
-</div>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 text-xs">
-<div class="px-3 py-2 rounded-lg" style="background:rgba(168,216,255,.15)">🌐 IP: {{ $service->ip_address ?? '待分配' }}</div>
-<div class="px-3 py-2 rounded-lg" style="background:rgba(255,229,180,.2)">👤 用户: {{ $service->username ?? '待分配' }}</div>
-<div class="px-3 py-2 rounded-lg" style="background:rgba(179,157,219,.15)">📅 到期: {{ $service->expires_at ? $service->expires_at->format('Y-m-d') : '未设置' }}</div>
-<div class="px-3 py-2 rounded-lg" style="background:rgba(255,158,196,.1)">💰 ¥{{ optional($service->product)->price ?? 0 }}/月</div>
-</div>
-</div>
+<div class="anime-card rounded-2xl overflow-hidden">
+<table class="min-w-full">
+<thead>
+<tr class="border-b-2 border-pink-100">
+<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">产品</th>
+<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">状态</th>
+<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">IP 地址</th>
+<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">到期时间</th>
+<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">操作</th>
+</tr>
+</thead>
+<tbody>
+@forelse($services ?? collect() as $service)
+<tr class="border-b border-pink-50 hover:bg-pink-50/30">
+<td class="px-6 py-4">
+    {{ optional($service->product)->name ?? '-' }}
+    {{-- 优惠标识 --}}
+    @if($service->order && ($service->order->discount_amount ?? 0) > 0)
+        <span class="ml-2 px-2 py-0.5 rounded-full text-xs"
+              style="background:rgba(255,158,196,.15);color:#FF9EC4">
+            🎫 已省 ¥{{ number_format($service->order->discount_amount, 2) }}
+        </span>
+    @endif
+</td>
+<td class="px-6 py-4">
+    @if($service->status === 'active')
+        <span class="px-3 py-1 rounded-full bg-green-500/20 text-green-600 text-xs border border-green-500/30">已激活</span>
+    @elseif($service->status === 'pending')
+        <span class="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-600 text-xs border border-yellow-500/30">等待分配</span>
+    @else
+        <span class="px-3 py-1 rounded-full bg-gray-500/20 text-gray-600 text-xs">{{ $service->status }}</span>
+    @endif
+</td>
+<td class="px-6 py-4 font-mono text-gray-600">{{ $service->ip_address ?? '待分配' }}</td>
+<td class="px-6 py-4 text-xs text-gray-500">
+    {{ $service->expires_at ? $service->expires_at->format('Y-m-d') : '-' }}
+</td>
+<td class="px-6 py-4">
+    <a href="{{ route('client.services.show', $service) }}" class="text-cyan-500 hover:underline text-sm">查看详情</a>
+</td>
+</tr>
 @empty
-<div class="anime-card p-12 text-center">
-<div class="text-6xl mb-4">🌸</div>
-<div class="text-lg font-bold mb-2" style="color:#FF9EC4">还没有任何服务</div>
-<p class="text-sm mb-6" style="color:#9CA3AF">快去挑选一台樱花喵守护的服务器吧</p>
-<a href="{{ route('orders.index') }}" class="anime-btn">✨ 立即选购</a>
-</div>
+<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">
+    <div class="text-4xl mb-3">💗</div>
+    <div>暂无服务，去产品页选购吧</div>
+</td></tr>
 @endforelse
+</tbody>
+</table>
+</div>
 @endsection

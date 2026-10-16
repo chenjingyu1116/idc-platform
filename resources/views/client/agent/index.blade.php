@@ -3,9 +3,10 @@
 
 @php
     $u = $user ?? auth()->user();
+    $agent = $u->agent ?? null;
     $referralCount = $referralCount ?? 0;
     $totalCommission = $totalCommission ?? 0;
-    $referralCode = $u->referral_code ?? ('REF' . str_pad($u->id ?? 0, 6, '0', STR_PAD_LEFT));
+    $referralCode = $agent->code ?? ('REF' . str_pad($u->id ?? 0, 6, '0', STR_PAD_LEFT));
 @endphp
 
 <h1 class="text-2xl font-bold mb-6">🌸 代理中心</h1>
@@ -29,11 +30,7 @@
         <div class="text-4xl mb-2">🎖️</div>
         <div class="text-xs text-gray-500">当前等级</div>
         <div class="text-lg font-bold mt-1" style="color:#FF9EC4">
-            @if(method_exists($u, 'agentLevelName'))
-                {{ $u->agentLevelName() }}
-            @else
-                普通代理
-            @endif
+            {{ $agent->level ?? '普通代理' }}
         </div>
     </div>
     <div class="anime-card p-6 text-center">
@@ -44,12 +41,16 @@
     <div class="anime-card p-6 text-center">
         <div class="text-4xl mb-2">💰</div>
         <div class="text-xs text-gray-500">累计返佣</div>
-        <div class="text-3xl font-bold" style="color:#FF9EC4">¥{{ number_format($totalCommission, 2) }}</div>
+        <div class="text-3xl font-bold" style="color:#FF9EC4">
+            ¥{{ number_format($agent->total_earned ?? 0, 2) }}
+        </div>
     </div>
     <div class="anime-card p-6 text-center">
         <div class="text-4xl mb-2">💴</div>
         <div class="text-xs text-gray-500">可提现</div>
-        <div class="text-3xl font-bold" style="color:#A8D8FF">¥{{ number_format($u->balance ?? 0, 2) }}</div>
+        <div class="text-3xl font-bold" style="color:#A8D8FF">
+            ¥{{ number_format($agent->withdrawable ?? 0, 2) }}
+        </div>
     </div>
 </div>
 

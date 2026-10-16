@@ -86,31 +86,31 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 </div>
 </section>
 
-<section id="products" class="py-20">
+<section id="products" class="py-20 border-t border-cyan-900/30" style="background:rgba(255,255,255,.5)">
 <div class="max-w-7xl mx-auto px-4">
 <div class="text-center mb-12">
 <h2 class="text-4xl font-bold mb-3" style="font-family:'ZCOOL KuaiLe';color:#B39DDB">我们的云产品</h2>
 <p class="text-sm" style="color:#9CA3AF">每一台都用心呵护 🌸</p>
 </div>
 <div class="grid md:grid-cols-3 gap-6">
-<div class="anime-card p-8 text-center">
+<a href="/products" class="anime-card p-8 text-center block hover:shadow-xl transition">
 <div class="text-5xl mb-4">🖥️</div>
 <h3 class="text-xl font-bold mb-2" style="color:#FF9EC4">香港虚拟主机</h3>
 <p class="text-sm" style="color:#7A7A9A">免备案 · CN2 直连 · 5 元起</p>
 <div class="text-2xl font-bold mt-4" style="color:#B39DDB">¥5<span class="text-sm">/月起</span></div>
-</div>
-<div class="anime-card p-8 text-center">
+</a>
+<a href="/products" class="anime-card p-8 text-center block hover:shadow-xl transition">
 <div class="text-5xl mb-4">☁️</div>
 <h3 class="text-xl font-bold mb-2" style="color:#FF9EC4">云服务器 VPS</h3>
 <p class="text-sm" style="color:#7A7A9A">1核1G 起 · 按需升级</p>
 <div class="text-2xl font-bold mt-4" style="color:#B39DDB">¥15<span class="text-sm">/月起</span></div>
-</div>
-<div class="anime-card p-8 text-center">
+</a>
+<a href="/products" class="anime-card p-8 text-center block hover:shadow-xl transition">
 <div class="text-5xl mb-4">🚀</div>
 <h3 class="text-xl font-bold mb-2" style="color:#FF9EC4">美国大带宽</h3>
 <p class="text-sm" style="color:#7A7A9A">100M 大带宽 · 高防可选</p>
 <div class="text-2xl font-bold mt-4" style="color:#B39DDB">¥25<span class="text-sm">/月起</span></div>
-</div>
+</a>
 </div>
 </div>
 </section>

@@ -23,4 +23,32 @@ class AgentController extends Controller {
         $withdrawal->update(['status'=>'rejected']);
         return back()->with('success','已拒绝');
     }
+    public function create()
+    {
+        $users = \App\Models\User::orderBy("id", "desc")->get();
+        return view("admin.agents.create", compact("users"));
+    }
+
+    public function store(Request $request)
+    {
+        $v = $request->validate([
+            "user_id" => "required|exists:users,id|unique:agents,user_id",
+            "code" => "nullable|string|max:50|unique:agents,code",
+            "level" => "required|string|max:20",
+            "commission_rate" => "required|numeric|min:0|max:1",
+            "is_active" => "boolean",
+        ]);
+
+        if (empty($v["code"])) {
+            $v["code"] = "REF" . str_pad($v["user_id"], 6, "0", STR_PAD_LEFT);
+        }
+
+        $v["is_active"] = $request->boolean("is_active", true);
+        $v["total_earned"] = 0;
+        $v["withdrawable"] = 0;
+
+        \App\Models\Agent::create($v);
+
+        return redirect()->route("admin.agents.index")->with("success", "代理已添加");
+    }
 }

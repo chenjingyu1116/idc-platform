@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--sakura:#FF9EC4;--sky:#A8D8FF;--cream:#FFE5B4;--purple:#B39DDB;--text:#4A4A6A}
-body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:linear-gradient(135deg,#FFF5FA 0%,#F0F5FF 50%,#FFF0F5 100%);color:var(--text);min-height:100vh;position:relative;margin:0}
+body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:linear-gradient(135deg,#FFF5FA 0%,#F0F5FF 50%,#FFF0F5 100%);color:var(--text);min-height:100vh;position:relative}
 .anime-card{background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border:2px solid rgba(255,158,196,.3);border-radius:20px;box-shadow:0 8px 32px rgba(255,158,196,.15);transition:all .3s ease}
 .anime-card:hover{border-color:rgba(255,158,196,.6);box-shadow:0 12px 40px rgba(255,158,196,.25)}
 .anime-btn{background:linear-gradient(135deg,#FF9EC4 0%,#FFB6D5 50%,#A8D8FF 100%);color:#fff;border-radius:9999px;padding:8px 24px;font-weight:600;box-shadow:0 4px 15px rgba(255,158,196,.4);border:none;cursor:pointer;transition:all .3s}
@@ -19,81 +19,38 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 .petal{position:fixed;top:-10px;color:#FFB6D5;font-size:16px;pointer-events:none;animation:fall linear infinite;z-index:1;opacity:.7}
 @keyframes fall{0%{transform:translateY(-10px) rotate(0);opacity:0}10%{opacity:.7}100%{transform:translateY(105vh) rotate(360deg);opacity:0}}
 .nav-anime{background:rgba(255,255,255,.9);backdrop-filter:blur(16px);border-bottom:2px solid rgba(255,158,196,.25)}
-
-/* ============ B11-B 移动端优化 ============ */
-
-/* 移动端菜单：滑入动画 */
-#mobile-menu{max-height:0;overflow:hidden;transition:max-height .35s ease}
-#mobile-menu.open{max-height:80vh;overflow-y:auto}
-
-/* 汉堡按钮动画 */
-#hamburger span{display:block;width:24px;height:2px;background:#FF9EC4;margin:5px 0;transition:all .3s;border-radius:2px}
-#hamburger.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-#hamburger.active span:nth-child(2){opacity:0}
-#hamburger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-
-/* 小屏：表格转卡片 */
-@media (max-width: 768px) {
-    .table-responsive { display: block; width: 100%; }
-    .table-responsive thead { display: none; }
-    .table-responsive tbody tr {
-        display: block;
-        background: rgba(255,255,255,.85);
-        border: 2px solid rgba(255,158,196,.25);
-        border-radius: 16px;
-        margin-bottom: 12px;
-        padding: 12px 16px;
-    }
-    .table-responsive tbody td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px dashed rgba(255,158,196,.15);
-        font-size: 13px;
-    }
-    .table-responsive tbody td:last-child { border-bottom: none; }
-    .table-responsive tbody td::before {
-        content: attr(data-label);
-        font-weight: 600;
-        color: #FF9EC4;
-        margin-right: 12px;
-        flex-shrink: 0;
-    }
-    /* 隐藏掉表格里的 emoji 装饰 */
-    .table-responsive tbody td:empty { display: none; }
-
-    /* 移动端标题缩小 */
-    h1 { font-size: 1.5rem !important; }
-
-    /* 卡片间距 */
-    .anime-card { border-radius: 16px; }
-
-    /* 隐藏桌面专用元素 */
-    .desktop-only { display: none !important; }
-
-    /* 移动端按钮加大触摸区域 */
-    .anime-btn, .anime-btn-soft { min-height: 40px; padding: 10px 20px; }
-}
-
-/* 平板适配 */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .table-responsive tbody td { font-size: 13px; }
-}
-
-/* 深色模式 */
+.nav-link{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border-radius:12px;font-size:13px;font-weight:600;color:#4A4A6A;transition:all .2s;white-space:nowrap}
+.nav-link:hover{background:rgba(255,158,196,.15);color:#FF6B9E}
+.nav-link-admin{color:#8B5CF6}
+.nav-link-admin:hover{background:rgba(179,157,219,.15);color:#7C3AED}
+/* 管理下拉 */
+.admin-dropdown{position:relative}
+.admin-dropdown-menu{position:absolute;top:100%;right:0;margin-top:8px;min-width:220px;background:rgba(255,255,255,.98);backdrop-filter:blur(16px);border:2px solid rgba(179,157,219,.3);border-radius:16px;box-shadow:0 12px 40px rgba(179,157,219,.2);padding:8px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:all .25s;z-index:100}
+.admin-dropdown:hover .admin-dropdown-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.admin-dropdown-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;font-size:13px;color:#4A4A6A;transition:all .15s}
+.admin-dropdown-item:hover{background:rgba(179,157,219,.15);color:#7C3AED}
+.admin-divider{height:1px;background:rgba(255,158,196,.2);margin:6px 0}
+/* 主题深色 */
 body[data-theme="dark"]{background:linear-gradient(135deg,#1a1420,#1a1a2e,#201825);color:#E0E0F0}
 body[data-theme="dark"] .anime-card{background:rgba(40,30,55,.85)!important;border-color:rgba(255,158,196,.4)!important;color:#E0E0F0}
-body[data-theme="dark"] .nav-anime{background:rgba(20,15,30,.9)!important}
+body[data-theme="dark"] .nav-anime{background:rgba(20,15,30,.92)!important}
+body[data-theme="dark"] .nav-link{color:#D0D0E0}
+body[data-theme="dark"] .admin-dropdown-menu{background:rgba(30,20,45,.98);border-color:rgba(179,157,219,.5)}
+body[data-theme="dark"] .admin-dropdown-item{color:#D0D0E0}
 body[data-theme="dark"] input,body[data-theme="dark"] textarea,body[data-theme="dark"] select{background:rgba(30,20,45,.6)!important;color:#E0E0F0!important;border-color:rgba(255,158,196,.4)!important}
-body[data-theme="dark"] table{color:#E0E0F0}
-body[data-theme="dark"] .table-responsive tbody tr{background:rgba(40,30,55,.85)!important;border-color:rgba(255,158,196,.4)!important}
-
-/* 平滑滚动 */
-html { scroll-behavior: smooth; }
+/* 移动端 */
+@media (max-width: 768px){
+  .nav-desktop{display:none!important}
+  .nav-mobile-btn{display:flex!important}
+  .nav-mobile-menu{display:block!important}
+}
+.nav-mobile-btn{display:none;cursor:pointer;padding:6px;border-radius:10px;background:rgba(255,158,196,.15)}
+.nav-mobile-menu{display:none;width:100%;padding:12px 0;border-top:1px solid rgba(255,158,196,.2);margin-top:8px}
 </style>
 </head>
 <body>
+
+{{-- 樱花飘落 --}}
 <div class="petal" style="left:5%;animation-duration:12s">🌸</div>
 <div class="petal" style="left:20%;animation-duration:15s;animation-delay:2s">🌸</div>
 <div class="petal" style="left:40%;animation-duration:11s;animation-delay:4s">🌸</div>
@@ -102,162 +59,170 @@ html { scroll-behavior: smooth; }
 
 <nav class="nav-anime sticky top-0 z-50">
 <div class="max-w-7xl mx-auto px-4 py-3">
-<div class="flex justify-between items-center">
 
-    {{-- Logo --}}
-    <a href="/" class="flex items-center gap-2" title="返回首页">
-        <span class="text-2xl">🌸</span>
-        <span class="text-xl font-bold" style="font-family:'ZCOOL KuaiLe';color:#FF9EC4">樱花云</span>
-    </a>
+{{-- 顶部一行：Logo + 桌面菜单 + 右侧操作 --}}
+<div class="flex items-center justify-between gap-3">
 
-    {{-- 桌面导航 --}}
-    <div class="hidden md:flex items-center gap-4 text-xs font-semibold flex-wrap">
-        <a href="{{ route('announcements.index') }}" class="hover:text-pink-500">📢 公告</a>
-        <a href="{{ route('orders.index') }}" class="hover:text-pink-500">🎀 产品</a>
-<a href="{{ route('cart.index') }}" class="hover:text-pink-500">🛒 购物车</a>
-        <a href="{{ route('client.services.index') }}" class="hover:text-pink-500">💗 服务</a>
-        <a href="{{ route('client.recharge.index') }}" class="hover:text-pink-500">💎 充值</a>
-        <a href="{{ route('client.tickets.index') }}" class="hover:text-pink-500">💌 工单</a>
-        @if(auth()->user()?->is_admin)
-        <span class="text-gray-300">|</span>
-        <a href="{{ route('admin.dashboard') }}" class="text-purple-500 hover:text-purple-400">👑 看板</a>
-        <a href="{{ route('admin.services.index') }}" class="text-purple-500 hover:text-purple-400">⚙️ 资源</a>
-        <a href="{{ route('admin.recharges.index') }}" class="text-purple-500 hover:text-purple-400">💰 充值</a>
-        <a href="{{ route('admin.providers.index') }}" class="text-purple-500 hover:text-purple-400">🔌 上游</a>
-        <a href="{{ route('admin.reports.index') }}" class="text-purple-500 hover:text-purple-400">📊 报表</a>
-        <a href="{{ route('admin.monitor.index') }}" class="text-purple-500 hover:text-purple-400">📡 监控</a>
-        <a href="{{ route('admin.settings.index') }}" class="text-purple-500 hover:text-purple-400">⚙️ 设置</a>
-        @endif
-    </div>
+{{-- Logo --}}
+<a href="{{ route('welcome') }}" class="flex items-center gap-2 flex-shrink-0">
+<span class="text-2xl">🌸</span>
+<span class="text-lg font-bold hidden sm:inline" style="font-family:'ZCOOL KuaiLe';color:#FF9EC4">樱花云</span>
+</a>
 
-    {{-- 右侧操作 --}}
-    <div class="flex items-center gap-2">
-        <span class="hidden md:inline px-3 py-1 rounded-full text-xs" style="background:rgba(168,216,255,.3);color:#4A6FA5">💴 ¥{{ auth()->user()?->balance ?? 0 }}</span>
+{{-- 桌面端菜单 --}}
+<div class="nav-desktop hidden md:flex items-center gap-1 flex-1 justify-center flex-wrap">
+<a href="{{ route('announcements.index') }}" class="nav-link">📢 公告</a>
+<a href="{{ route('orders.index') }}" class="nav-link">🎀 产品</a>
+@if(Route::has('cart.index'))
+<a href="{{ route('cart.index') }}" class="nav-link">🛒 购物车</a>
+@endif
+<a href="{{ route('client.services.index') }}" class="nav-link">💗 服务</a>
+<a href="{{ route('client.recharge.index') }}" class="nav-link">💎 充值</a>
+<a href="{{ route('client.tickets.index') }}" class="nav-link">💌 工单</a>
+<a href="{{ route('client.coupons.index') }}" class="nav-link">🎫 券</a>
+<a href="{{ route('client.agent.index') }}" class="nav-link">🌸 代理</a>
+<a href="{{ route('client.notifications.index') }}" class="nav-link">🔔 通知</a>
 
-        {{-- 主题切换 --}}
-        <button onclick="__toggleTheme()" title="切换主题" class="hidden md:flex items-center justify-center" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#FF9EC4,#B39DDB);color:#fff;border:none;cursor:pointer;font-size:16px">
-            <span id="theme-icon">🌙</span>
-        </button>
-
-        {{-- 桌面退出 --}}
-        <form method="POST" action="{{ route('logout') }}" class="hidden md:inline">@csrf
-            <button type="submit" class="anime-btn-soft text-xs">退出</button>
-        </form>
-
-        {{-- 汉堡按钮（移动端） --}}
-        <button id="hamburger" class="md:hidden flex flex-col justify-center items-center" onclick="__toggleMenu()" style="width:40px;height:40px;background:transparent;border:none;cursor:pointer">
-            <span></span><span></span><span></span>
-        </button>
-    </div>
+@if(auth()->user()?->is_admin)
+<div class="admin-dropdown">
+<button class="nav-link nav-link-admin" style="cursor:pointer">
+👑 管理 <span style="font-size:10px">▼</span>
+</button>
+<div class="admin-dropdown-menu">
+<a href="{{ route('admin.dashboard') }}" class="admin-dropdown-item">👑 管理看板</a>
+<div class="admin-divider"></div>
+<a href="{{ route('admin.users.index') }}" class="admin-dropdown-item">👥 用户管理</a>
+<a href="{{ route('admin.orders.index') }}" class="admin-dropdown-item">📦 订单管理</a>
+<a href="{{ route('admin.services.index') }}" class="admin-dropdown-item">⚙️ 资源分配</a>
+<div class="admin-divider"></div>
+<a href="{{ route('admin.recharges.index') }}" class="admin-dropdown-item">💰 充值审核</a>
+<a href="{{ route('admin.finance.index') }}" class="admin-dropdown-item">💴 财务报表</a>
+<a href="{{ route('admin.withdrawals.index') }}" class="admin-dropdown-item">💸 提现审核</a>
+<a href="{{ route('admin.agents.index') }}" class="admin-dropdown-item">🌸 代理管理</a>
+<a href="{{ route('admin.coupons.index') }}" class="admin-dropdown-item">🎫 优惠券</a>
+<div class="admin-divider"></div>
+<a href="{{ route('admin.tickets.index') }}" class="admin-dropdown-item">💌 工单管理</a>
+<a href="{{ route('admin.announcements.index') }}" class="admin-dropdown-item">📢 公告管理</a>
+<a href="{{ route('admin.kb.index') }}" class="admin-dropdown-item">📚 知识库</a>
+<div class="admin-divider"></div>
+<a href="{{ route('admin.providers.index') }}" class="admin-dropdown-item">🔌 上游管理</a>
+<a href="{{ route('admin.product-mappings.index') }}" class="admin-dropdown-item">🔗 产品映射</a>
+<a href="{{ route('admin.provision-logs.index') }}" class="admin-dropdown-item">📋 开通日志</a>
+<div class="admin-divider"></div>
+<a href="{{ route('admin.reports.index') }}" class="admin-dropdown-item">📊 报表</a>
+<a href="{{ route('admin.monitor.index') }}" class="admin-dropdown-item">📡 监控</a>
+<a href="{{ route('admin.audit-logs.index') }}" class="admin-dropdown-item">📜 审计日志</a>
+<a href="{{ route('admin.admins.index') }}" class="admin-dropdown-item">👑 管理员</a>
+<a href="{{ route('admin.settings.index') }}" class="admin-dropdown-item">⚙️ 系统设置</a>
+</div>
+</div>
+@endif
 </div>
 
-{{-- 移动端折叠菜单 --}}
-<div id="mobile-menu" class="md:hidden">
-    <div class="pt-4 pb-2 space-y-1 text-sm">
-        <a href="{{ route('announcements.index') }}" class="block px-4 py-3 rounded-xl hover:bg-pink-50">📢 公告</a>
-        <a href="{{ route('orders.index') }}" class="block px-4 py-3 rounded-xl hover:bg-pink-50">🎀 产品列表</a>
-        <a href="{{ route('client.services.index') }}" class="block px-4 py-3 rounded-xl hover:bg-pink-50">💗 我的服务</a>
-        <a href="{{ route('client.recharge.index') }}" class="block px-4 py-3 rounded-xl hover:bg-pink-50">💎 充值</a>
-        <a href="{{ route('client.tickets.index') }}" class="block px-4 py-3 rounded-xl hover:bg-pink-50">💌 工单</a>
-        <a href="{{ route('client.coupons.index') }}" class="block px-4 py-3 rounded-xl hover:bg-pink-50">🎫 优惠券</a>
-        <a href="{{ route('client.agent.index') }}" class="block px-4 py-3 rounded-xl hover:bg-pink-50">🌸 代理中心</a>
-        <a href="{{ route('client.notifications.index') }}" class="block px-4 py-3 rounded-xl hover:bg-pink-50">🔔 通知</a>
+{{-- 右侧操作 --}}
+<div class="flex items-center gap-2 flex-shrink-0">
+<span class="hidden sm:inline-block px-3 py-1 rounded-full text-xs" style="background:rgba(168,216,255,.3);color:#4A6FA5">💴 ¥{{ auth()->user()?->balance ?? 0 }}</span>
 
-        @if(auth()->user()?->is_admin)
-        <div class="pt-2 mt-2 border-t-2 border-pink-100">
-            <div class="px-4 py-2 text-xs text-purple-500 font-bold">👑 管理后台</div>
-            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-3 rounded-xl hover:bg-purple-50">📊 看板</a>
-            <a href="{{ route('admin.services.index') }}" class="block px-4 py-3 rounded-xl hover:bg-purple-50">⚙️ 资源管理</a>
-            <a href="{{ route('admin.recharges.index') }}" class="block px-4 py-3 rounded-xl hover:bg-purple-50">💰 充值审核</a>
-            <a href="{{ route('admin.providers.index') }}" class="block px-4 py-3 rounded-xl hover:bg-purple-50">🔌 上游管理</a>
-            <a href="{{ route('admin.tickets.index') }}" class="block px-4 py-3 rounded-xl hover:bg-purple-50">💌 工单管理</a>
-            <a href="{{ route('admin.users.index') }}" class="block px-4 py-3 rounded-xl hover:bg-purple-50">👥 用户管理</a>
-            <a href="{{ route('admin.reports.index') }}" class="block px-4 py-3 rounded-xl hover:bg-purple-50">📈 报表</a>
-            <a href="{{ route('admin.monitor.index') }}" class="block px-4 py-3 rounded-xl hover:bg-purple-50">📡 监控</a>
-            <a href="{{ route('admin.settings.index') }}" class="block px-4 py-3 rounded-xl hover:bg-purple-50">⚙️ 系统设置</a>
-        </div>
-        @endif
+<button onclick="__toggleTheme()" title="切换主题" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#FF9EC4,#B39DDB);color:#fff;border:none;cursor:pointer;font-size:14px">
+<span id="theme-icon">🌙</span>
+</button>
 
-        <div class="pt-3 mt-2 border-t-2 border-pink-100 flex items-center justify-between px-4 py-3">
-            <span class="text-xs" style="color:#4A6FA5">💴 ¥{{ auth()->user()?->balance ?? 0 }}</span>
-            <div class="flex items-center gap-2">
-                <button onclick="__toggleTheme()" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#FF9EC4,#B39DDB);color:#fff;border:none">
-                    <span id="theme-icon-mobile">🌙</span>
-                </button>
-                <form method="POST" action="{{ route('logout') }}" class="inline">@csrf
-                    <button type="submit" class="anime-btn-soft text-xs">退出</button>
-                </form>
-            </div>
-        </div>
-    </div>
+<form method="POST" action="{{ route('logout') }}" class="inline">@csrf
+<button type="submit" class="anime-btn-soft text-xs hidden sm:inline-block">退出</button>
+</form>
+
+{{-- 汉堡按钮 --}}
+<button class="nav-mobile-btn" onclick="document.getElementById('mobileMenu').classList.toggle('open');this.classList.toggle('active')">
+<span style="display:block;width:22px;height:2px;background:#FF9EC4;margin:4px 0;transition:all .3s;border-radius:2px"></span>
+<span style="display:block;width:22px;height:2px;background:#FF9EC4;margin:4px 0;transition:all .3s;border-radius:2px"></span>
+<span style="display:block;width:22px;height:2px;background:#FF9EC4;margin:4px 0;transition:all .3s;border-radius:2px"></span>
+</button>
+</div>
+</div>
+
+{{-- 移动端菜单 --}}
+<div id="mobileMenu" class="nav-mobile-menu">
+<div class="grid grid-cols-2 gap-2">
+<a href="{{ route('announcements.index') }}" class="nav-link">📢 公告</a>
+<a href="{{ route('orders.index') }}" class="nav-link">🎀 产品</a>
+@if(Route::has('cart.index'))
+<a href="{{ route('cart.index') }}" class="nav-link">🛒 购物车</a>
+@endif
+<a href="{{ route('client.services.index') }}" class="nav-link">💗 服务</a>
+<a href="{{ route('client.recharge.index') }}" class="nav-link">💎 充值</a>
+<a href="{{ route('client.tickets.index') }}" class="nav-link">💌 工单</a>
+<a href="{{ route('client.coupons.index') }}" class="nav-link">🎫 券</a>
+<a href="{{ route('client.agent.index') }}" class="nav-link">🌸 代理</a>
+<a href="{{ route('client.notifications.index') }}" class="nav-link">🔔 通知</a>
+@if(auth()->user()?->is_admin)
+<a href="{{ route('admin.dashboard') }}" class="nav-link nav-link-admin">👑 看板</a>
+<a href="{{ route('admin.users.index') }}" class="nav-link nav-link-admin">👥 用户</a>
+<a href="{{ route('admin.orders.index') }}" class="nav-link nav-link-admin">📦 订单</a>
+<a href="{{ route('admin.services.index') }}" class="nav-link nav-link-admin">⚙️ 资源</a>
+<a href="{{ route('admin.recharges.index') }}" class="nav-link nav-link-admin">💰 充值</a>
+<a href="{{ route('admin.finance.index') }}" class="nav-link nav-link-admin">💴 财务</a>
+<a href="{{ route('admin.withdrawals.index') }}" class="nav-link nav-link-admin">💸 提现</a>
+<a href="{{ route('admin.agents.index') }}" class="nav-link nav-link-admin">🌸 代理</a>
+<a href="{{ route('admin.coupons.index') }}" class="nav-link nav-link-admin">🎫 券</a>
+<a href="{{ route('admin.tickets.index') }}" class="nav-link nav-link-admin">💌 工单</a>
+<a href="{{ route('admin.announcements.index') }}" class="nav-link nav-link-admin">📢 公告</a>
+<a href="{{ route('admin.kb.index') }}" class="nav-link nav-link-admin">📚 知识库</a>
+<a href="{{ route('admin.providers.index') }}" class="nav-link nav-link-admin">🔌 上游</a>
+<a href="{{ route('admin.product-mappings.index') }}" class="nav-link nav-link-admin">🔗 映射</a>
+<a href="{{ route('admin.provision-logs.index') }}" class="nav-link nav-link-admin">📋 日志</a>
+<a href="{{ route('admin.reports.index') }}" class="nav-link nav-link-admin">📊 报表</a>
+<a href="{{ route('admin.monitor.index') }}" class="nav-link nav-link-admin">📡 监控</a>
+<a href="{{ route('admin.audit-logs.index') }}" class="nav-link nav-link-admin">📜 审计</a>
+<a href="{{ route('admin.admins.index') }}" class="nav-link nav-link-admin">👑 管理员</a>
+<a href="{{ route('admin.settings.index') }}" class="nav-link nav-link-admin">⚙️ 设置</a>
+@endif
+</div>
+<form method="POST" action="{{ route('logout') }}" class="mt-3">@csrf
+<button type="submit" class="anime-btn w-full text-xs">退出登录</button>
+</form>
 </div>
 
 </div>
 </nav>
 
-@if(session('success'))
-<div class="max-w-7xl mx-auto px-4 mt-4">
-    <div class="anime-card px-5 py-3" style="border-color:rgba(168,216,255,.6)">🌸 {{ session('success') }}</div>
-</div>
-@endif
-@if(session('error'))
-<div class="max-w-7xl mx-auto px-4 mt-4">
-    <div class="anime-card px-5 py-3" style="border-color:rgba(255,107,107,.6)">⚠️ {{ session('error') }}</div>
-</div>
-@endif
+<style>
+#mobileMenu{max-height:0;overflow:hidden;transition:max-height .35s ease}
+#mobileMenu.open{max-height:80vh;overflow-y:auto}
+.nav-mobile-btn.active span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.nav-mobile-btn.active span:nth-child(2){opacity:0}
+.nav-mobile-btn.active span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+</style>
 
-<main class="max-w-7xl mx-auto px-4 py-6 md:py-8 relative z-10">
+{{-- 消息提示 --}}
+<div class="max-w-7xl mx-auto px-4 mt-4">
+@if(session('success'))<div class="anime-card px-5 py-3" style="border-color:rgba(168,216,255,.6)">🌸 {{ session('success') }}</div>@endif
+@if(session('error'))<div class="anime-card px-5 py-3" style="border-color:rgba(255,107,107,.6)">⚠️ {{ session('error') }}</div>@endif
+</div>
+
+<main class="max-w-7xl mx-auto px-4 py-8 relative z-10">
 @yield('content')
 </main>
 
 @include('components.site-footer')
-
 @include('components.toast')
 @include('components.loading')
 
+{{-- 主题切换 --}}
 <script>
-function __toggleMenu(){
-    var m = document.getElementById('mobile-menu');
-    var h = document.getElementById('hamburger');
-    m.classList.toggle('open');
-    h.classList.toggle('active');
-}
-
-function __toggleTheme(){
-    var cur = document.body.getAttribute('data-theme') || 'light';
-    var next = cur === 'dark' ? 'light' : 'dark';
-    document.body.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-    var i1 = document.getElementById('theme-icon');
-    var i2 = document.getElementById('theme-icon-mobile');
-    if (i1) i1.textContent = next === 'dark' ? '☀️' : '🌙';
-    if (i2) i2.textContent = next === 'dark' ? '☀️' : '🌙';
-}
-
 (function(){
-    var t = localStorage.getItem('theme') || 'light';
-    document.addEventListener('DOMContentLoaded', function(){
-        document.body.setAttribute('data-theme', t);
-        var i1 = document.getElementById('theme-icon');
-        var i2 = document.getElementById('theme-icon-mobile');
-        if (i1) i1.textContent = t === 'dark' ? '☀️' : '🌙';
-        if (i2) i2.textContent = t === 'dark' ? '☀️' : '🌙';
-    });
+    var t = localStorage.getItem("theme") || "light";
+    document.body.setAttribute("data-theme", t);
+    var i = document.getElementById("theme-icon");
+    if (i) i.textContent = t === "dark" ? "☀️" : "🌙";
 })();
-
-// 移动端：点击菜单里的链接后自动收起
-document.addEventListener('DOMContentLoaded', function(){
-    var menu = document.getElementById('mobile-menu');
-    if (menu) {
-        menu.querySelectorAll('a').forEach(function(a){
-            a.addEventListener('click', function(){
-                menu.classList.remove('open');
-                document.getElementById('hamburger').classList.remove('active');
-            });
-        });
-    }
-});
+function __toggleTheme(){
+    var cur = document.body.getAttribute("data-theme") || "light";
+    var next = cur === "dark" ? "light" : "dark";
+    document.body.setAttribute("data-theme", next);
+    localStorage.setItem("theme", next);
+    var i = document.getElementById("theme-icon");
+    if (i) i.textContent = next === "dark" ? "☀️" : "🌙";
+}
 </script>
-@include("components.ux")
 </body>
 </html>
