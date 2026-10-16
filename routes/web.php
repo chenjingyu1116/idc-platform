@@ -125,6 +125,9 @@ Route::get('/dashboard', [ADash::class, 'index'])->name('dashboard');
         Route::delete('/providers/{provider}', [AProvider::class, 'destroy'])->name('providers.destroy');
 
         Route::get('/product-mappings', [AMapping::class, 'index'])->name('product-mappings.index');
+        Route::get('/product-mappings/create', [AMapping::class, 'create'])->name('product-mappings.create');
+        Route::post('/product-mappings', [AMapping::class, 'store'])->name('product-mappings.store');
+        Route::delete('/product-mappings/{productMapping}', [AMapping::class, 'destroy'])->name('product-mappings.destroy');
 
         Route::get('/payment-configs', [APayment::class, 'index'])->name('payment-configs.index');
         Route::get('/payment-configs/create', [APayment::class, 'create'])->name('payment-configs.create');
@@ -169,6 +172,8 @@ Route::get('/dashboard', [ADash::class, 'index'])->name('dashboard');
         Route::get('/coupons/create', [ACoupon::class, 'create'])->name('coupons.create');
         Route::post('/coupons', [ACoupon::class, 'store'])->name('coupons.store');
         Route::delete('/coupons/{coupon}', [ACoupon::class, 'destroy'])->name('coupons.destroy');
+        Route::get('/coupons/{coupon}/distribute', [ACoupon::class, 'distribute'])->name('coupons.distribute');
+        Route::post('/coupons/{coupon}/distribute', [ACoupon::class, 'doDistribute'])->name('coupons.doDistribute');
 
         // 知识库完整 CRUD
 

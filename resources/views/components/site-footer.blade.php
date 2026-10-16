@@ -11,7 +11,6 @@
 @endphp
 
 <footer class="border-t-2 border-pink-100 mt-12 py-6 px-4 text-center text-sm" style="color:#9CA3AF;position:relative;z-index:10">
-    {{-- 平铺一行 --}}
     <div class="max-w-7xl mx-auto flex flex-wrap justify-center items-center gap-x-4 gap-y-2">
 
         {{-- 联系方式 --}}
@@ -32,10 +31,22 @@
         <span class="whitespace-nowrap">
             🌸 {{ $__siteName }} © {{ date('Y') }}
         </span>
-        <span class="text-pink-200">·</span>
 
-        {{-- 返回官网 --}}
-        <a href="{{ route('home') }}" class="hover:text-pink-500 whitespace-nowrap">返回官网</a>
+        {{-- 快捷链接 --}}
+        @if(\Illuminate\Support\Facades\Route::has('kb.index'))
+        <span class="text-pink-200">·</span>
+        <a href="{{ route('kb.index') }}" class="hover:text-pink-500 whitespace-nowrap">📚 帮助中心</a>
+        @endif
+
+        @if(\Illuminate\Support\Facades\Route::has('client.tickets.create') && auth()->check())
+        <span class="text-pink-200">·</span>
+        <a href="{{ route('client.tickets.create') }}" class="hover:text-pink-500 whitespace-nowrap">💌 联系客服</a>
+        @endif
+
+        @if(\Illuminate\Support\Facades\Route::has('announcements.index'))
+        <span class="text-pink-200">·</span>
+        <a href="{{ route('announcements.index') }}" class="hover:text-pink-500 whitespace-nowrap">📢 公告</a>
+        @endif
 
         {{-- 标语 --}}
         @if($__slogan)

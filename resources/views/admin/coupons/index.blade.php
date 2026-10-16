@@ -9,48 +9,44 @@
 <table class="min-w-full">
 <thead>
 <tr class="border-b-2 border-pink-100">
-<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">代码</th>
-<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">名称</th>
-<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">类型</th>
-<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">面值</th>
-<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">已用/总数</th>
-<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">状态</th>
-<th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">操作</th>
+<th class="px-6 py-3 text-left text-xs text-pink-400">代码</th>
+<th class="px-6 py-3 text-left text-xs text-pink-400">名称</th>
+<th class="px-6 py-3 text-left text-xs text-pink-400">面值</th>
+<th class="px-6 py-3 text-left text-xs text-pink-400">已用/总量</th>
+<th class="px-6 py-3 text-left text-xs text-pink-400">已发/持有</th>
+<th class="px-6 py-3 text-left text-xs text-pink-400">状态</th>
+<th class="px-6 py-3 text-left text-xs text-pink-400">操作</th>
 </tr>
 </thead>
 <tbody>
-@forelse($coupons ?? collect() as $c)
+@forelse($coupons as $c)
 <tr class="border-b border-pink-50 hover:bg-pink-50/30">
 <td class="px-6 py-3 font-mono text-sm">{{ $c->code }}</td>
 <td class="px-6 py-3">{{ $c->name }}</td>
-<td class="px-6 py-3">{{ $c->type === 'fixed' ? '固定金额' : '百分比' }}</td>
 <td class="px-6 py-3 font-mono" style="color:#FF9EC4">
     {{ $c->type === 'fixed' ? '¥'.$c->value : $c->value.'%' }}
 </td>
-<td class="px-6 py-3 text-sm">
-    {{ $c->used ?? 0 }} / {{ $c->total ?? '∞' }}
-</td>
+<td class="px-6 py-3 text-sm">{{ $c->used }} / {{ $c->total > 0 ? $c->total : '不限' }}</td>
+<td class="px-6 py-3 text-sm">{{ $c->userCoupons()->count() ?? 0 }} 人</td>
 <td class="px-6 py-3">
-    @if($c->is_active ?? true)
-        <span class="text-green-500">✅ 启用</span>
-    @else
-        <span class="text-gray-400">停用</span>
-    @endif
+    @if($c->is_active)<span class="text-green-500">✅ 启用</span>
+    @else<span class="text-gray-400">停用</span>@endif
 </td>
-<td class="px-6 py-3">
+<td class="px-6 py-3 space-x-2 text-sm">
+    <a href="{{ route('admin.coupons.distribute', $c) }}" class="text-pink-500 hover:underline">发放</a>
     <form method="POST" action="{{ route('admin.coupons.destroy', $c) }}" class="inline"
-          onsubmit="return confirm('确认删除该优惠券？')">
+          onsubmit="return confirm('确认删除？')">
         @csrf @method('DELETE')
-        <button class="text-red-500 hover:underline text-sm">删除</button>
+        <button class="text-red-500 hover:underline">删除</button>
     </form>
 </td>
 </tr>
 @empty
-<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400">暂无优惠券，点击右上角添加</td></tr>
+<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400">暂无优惠券</td></tr>
 @endforelse
 </tbody>
 </table>
-@if(method_exists($coupons ?? collect(), 'links'))
+@if($coupons->hasPages())
 <div class="px-6 py-4">{{ $coupons->links() }}</div>
 @endif
 </div>
