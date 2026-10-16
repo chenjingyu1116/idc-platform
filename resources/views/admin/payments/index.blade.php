@@ -3,7 +3,7 @@
 <h1 class="text-2xl font-bold mb-6">💳 支付配置</h1>
 
 <div class="anime-card rounded-2xl overflow-hidden">
-<table class="min-w-full">
+<table class="min-w-full table-responsive">
 <thead><tr class="border-b-2 border-pink-100">
 <th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">名称</th>
 <th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">驱动</th>

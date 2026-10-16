@@ -1,9 +1,20 @@
 <?php
+
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
-class TicketReply extends Model {
-    protected $fillable = ['ticket_id','user_id','is_admin','content'];
-    protected $casts = ['is_admin'=>'boolean'];
-    public function ticket() { return $this->belongsTo(Ticket::class); }
-    public function user() { return $this->belongsTo(User::class); }
+
+class TicketReply extends Model
+{
+    protected $fillable = ['ticket_id', 'user_id', 'is_staff', 'message', 'file_path'];
+
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

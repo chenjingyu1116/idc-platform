@@ -70,6 +70,8 @@ class OrderController extends Controller
             \App\Jobs\ProvisionService::dispatch($service);
         }
 
+        \App\Services\Notifier::orderPaid($user->id, $order->order_no, $total);
+
         return redirect()->route("client.services.index")->with("success", "订单提交成功，正在为您开通资源！");
     }
 }

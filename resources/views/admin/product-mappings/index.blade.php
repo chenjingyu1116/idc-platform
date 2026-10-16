@@ -2,7 +2,7 @@
 @section('content')
 <h1 class="text-2xl font-bold mb-6">🔗 产品映射</h1>
 <div class="anime-card rounded-2xl overflow-hidden">
-<table class="min-w-full">
+<table class="min-w-full table-responsive">
 <thead><tr class="border-b-2 border-pink-100">
 <th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">本地产品</th>
 <th class="px-6 py-3 text-left text-xs text-pink-400 uppercase">上游</th>

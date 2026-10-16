@@ -2,7 +2,7 @@
 @section('content')
 <h1 class="text-2xl font-bold mb-6">🔑 API Token 管理</h1>
 <div class="anime-card rounded-lg overflow-hidden">
-<table class="min-w-full divide-y divide-pink-100">
+<table class="min-w-full table-responsive divide-y divide-pink-100">
 <thead class="bg-pink-50">
 <tr>
 <th class="px-6 py-3 text-left text-xs font-medium" style="color:#FF9EC4">用户</th>

@@ -5,7 +5,7 @@
 <a href="{{ route('admin.products.create') }}" class="anime-btn">+ 添加产品</a>
 </div>
 <div class="anime-card rounded-2xl overflow-hidden">
-<table class="min-w-full">
+<table class="min-w-full table-responsive">
 <thead><tr class="border-b-2 border-pink-100">
 <th class="px-4 py-3 text-left text-xs text-pink-400 uppercase">名称</th>
 <th class="px-4 py-3 text-left text-xs text-pink-400 uppercase">价格</th>

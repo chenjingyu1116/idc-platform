@@ -6,7 +6,7 @@
 </div>
 
 <div class="anime-card overflow-hidden">
-<table class="min-w-full">
+<table class="min-w-full table-responsive">
 <thead style="background:rgba(255,158,196,.1)">
 <tr>
 <th class="px-5 py-3 text-left text-xs font-bold" style="color:#FF9EC4">名称</th>

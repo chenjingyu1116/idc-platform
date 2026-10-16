@@ -4,7 +4,7 @@
 <h1 class="text-3xl font-bold mb-8" style="font-family:'ZCOOL KuaiLe';color:#FF9EC4">🎁 返佣记录</h1>
 
 <div class="anime-card overflow-hidden">
-<table class="min-w-full">
+<table class="min-w-full table-responsive">
 <thead style="background:rgba(255,229,244,.5)">
 <tr>
 <th class="px-6 py-4 text-left text-sm font-bold" style="color:#FF9EC4">时间</th>

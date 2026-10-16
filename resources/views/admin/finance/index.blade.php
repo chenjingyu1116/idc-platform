@@ -9,7 +9,7 @@
 </div>
 <div class="anime-card p-6">
 <h2 class="text-lg font-bold mb-4" style="color:#FF9EC4">📋 最近交易</h2>
-<table class="min-w-full">
+<table class="min-w-full table-responsive">
 <thead><tr class="border-b-2 border-pink-100">
 <th class="px-6 py-3 text-left text-xs text-pink-400">时间</th>
 <th class="px-6 py-3 text-left text-xs text-pink-400">用户</th>

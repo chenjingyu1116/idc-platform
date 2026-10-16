@@ -65,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/client/tickets/create', [CTicket::class, 'create'])->name('client.tickets.create');
     Route::post('/client/tickets', [CTicket::class, 'store'])->name('client.tickets.store');
     Route::get('/client/tickets/{ticket}', [CTicket::class, 'show'])->name('client.tickets.show');
+    Route::post('/client/tickets/{ticket}/reply', [CTicket::class, 'reply'])->name('client.tickets.reply');
 
     Route::get('/client/notifications', [CNotif::class, 'index'])->name('client.notifications.index');
     Route::get('/client/notifications/{id}/read', [CNotif::class, 'markRead'])->name('client.notifications.read');
@@ -75,7 +76,17 @@ Route::middleware(['auth'])->group(function () {
 
     /* ═══ 管理员 ═══ */
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', [ADash::class, 'index'])->name('dashboard');
+        
+Route::get('/dashboard', [ADash::class, 'index'])->name('dashboard');
+        Route::get('/orders/export', [\App\Http\Controllers\Admin\OrderController::class, 'export'])->name('orders.export');
+        Route::get('/users/export', [\App\Http\Controllers\Admin\UserController::class, 'export'])->name('users.export');
+        Route::post('/users/{user}/adjust-balance', [\App\Http\Controllers\Admin\UserController::class, 'adjustBalance'])->name('users.adjust-balance');
+        Route::post('/users/{user}/reset-password', [\App\Http\Controllers\Admin\UserController::class, 'resetPassword'])->name('users.reset-password');
+        Route::post('/services/{service}/suspend', [\App\Http\Controllers\Admin\ServiceController::class, 'suspend'])->name('services.suspend');
+        Route::post('/services/{service}/unsuspend', [\App\Http\Controllers\Admin\ServiceController::class, 'unsuspend'])->name('services.unsuspend');
+        Route::post('/services/{service}/terminate', [\App\Http\Controllers\Admin\ServiceController::class, 'terminate'])->name('services.terminate');
+        Route::post('/recharges/{recharge}/reject', [\App\Http\Controllers\Admin\RechargeController::class, 'reject'])->name('recharges.reject');
+        Route::post('/recharges/batch-approve', [\App\Http\Controllers\Admin\RechargeController::class, 'batchApprove'])->name('recharges.batch-approve');
 
         Route::get('/services', [AService::class, 'index'])->name('services.index');
         Route::get('/services/{service}/edit', [AService::class, 'edit'])->name('services.edit');
@@ -102,8 +113,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tickets', [ATicket::class, 'index'])->name('tickets.index');
         Route::get('/tickets/{ticket}', [ATicket::class, 'show'])->name('tickets.show');
         Route::post('/tickets/{ticket}/reply', [ATicket::class, 'reply'])->name('tickets.reply');
+        Route::post('/tickets/{ticket}/close', [ATicket::class, 'close'])->name('tickets.close');
 
         Route::get('/users', [AUser::class, 'index'])->name('users.index');
+        Route::get('/users/export', [AUser::class, 'export'])->name('users.export');
+        Route::get('/orders/export', [\App\Http\Controllers\Admin\OrderController::class, 'export'])->name('orders.export');
+        Route::post('/recharges/batch-approve', [ARecharge::class, 'batchApprove'])->name('recharges.batchApprove');
         Route::get('/users/{user}/edit', [AUser::class, 'edit'])->name('users.edit');
         Route::put('/users/{user}', [AUser::class, 'update'])->name('users.update');
 
@@ -162,6 +177,13 @@ Route::middleware(['auth'])->group(function () {
 
         // ─── 管理员账号 ───
 
+
+        // 支付配置路由别名（兼容视图中的 admin.payments.* 引用）
+        Route::get('/payments', [APayment::class, 'index'])->name('payments.index');
+        Route::post('/payments', [APayment::class, 'store'])->name('payments.store');
+        Route::put('/payments/{id}', [APayment::class, 'update'])->name('payments.update');
+
+        Route::post('/product-mappings', [AMapping::class, 'store'])->name('product-mappings.store');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
