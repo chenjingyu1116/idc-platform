@@ -98,5 +98,6 @@ input:focus{
 {{-- Footer（独立于 flex 容器外，在页面底部） --}}
 @include('components.site-footer')
 
+@include("components.ux")
 </body>
 </html>

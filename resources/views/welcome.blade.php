@@ -131,5 +131,6 @@ body{font-family:'Quicksand','ZCOOL KuaiLe',system-ui,sans-serif;background:line
 
 @include("components.site-footer")
 @include("components.theme-switcher")
+@include("components.ux")
 </body>
 </html>

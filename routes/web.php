@@ -53,6 +53,16 @@ Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('local
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/products', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/product/{product}', [\App\Http\Controllers\Client\ProductController::class, 'show'])->name('product.show');
+    Route::get('/products/compare', [\App\Http\Controllers\Client\ProductController::class, 'compare'])->name('products.compare');
+
+    // 购物车
+    Route::get('/cart', [\App\Http\Controllers\Client\CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [\App\Http\Controllers\Client\CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update', [\App\Http\Controllers\Client\CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove', [\App\Http\Controllers\Client\CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/clear', [\App\Http\Controllers\Client\CartController::class, 'clear'])->name('cart.clear');
+    Route::post('/cart/checkout', [\App\Http\Controllers\Client\CartController::class, 'checkout'])->name('cart.checkout');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
     Route::get('/client/services', [CService::class, 'index'])->name('client.services.index');

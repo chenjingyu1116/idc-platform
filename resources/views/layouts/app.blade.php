@@ -114,6 +114,7 @@ html { scroll-behavior: smooth; }
     <div class="hidden md:flex items-center gap-4 text-xs font-semibold flex-wrap">
         <a href="{{ route('announcements.index') }}" class="hover:text-pink-500">📢 公告</a>
         <a href="{{ route('orders.index') }}" class="hover:text-pink-500">🎀 产品</a>
+<a href="{{ route('cart.index') }}" class="hover:text-pink-500">🛒 购物车</a>
         <a href="{{ route('client.services.index') }}" class="hover:text-pink-500">💗 服务</a>
         <a href="{{ route('client.recharge.index') }}" class="hover:text-pink-500">💎 充值</a>
         <a href="{{ route('client.tickets.index') }}" class="hover:text-pink-500">💌 工单</a>
@@ -257,5 +258,6 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 });
 </script>
+@include("components.ux")
 </body>
 </html>
